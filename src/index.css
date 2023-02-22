@@ -1,13 +1,211 @@
-html,body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
+  background: #f4f4f4;
 }
 
 * {
   box-sizing: border-box;
+  font-family: "Inter", sans-serif;
 }
 
 #root {
   height: 100%;
+}
+
+.selectContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.stepContainer {
+  width: 110px;
+  margin: 10px;
+}
+
+.stepContainer > ul > li {
+  width: 90px;
+  height: 90px;
+  margin: 5px;
+  background: #fff;
+}
+
+.viewerContainer {
+  height: 85%;
+  width: 85%;
+}
+.optionContainer {
+  height: 50vh;
+  overflow: scroll;
+  overflow-x: hidden;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.listBadge {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  width: 15px;
+  height: 15px;
+  font-size: 12px;
+  background: #002240;
+  color: #fff;
+  border-radius: 50%;
+}
+
+.attributeListItem {
+  position: relative;
+}
+
+.listBadge::after {
+  display: none;
+  content: "\2713";
+  position: absolute;
+  top: -20px;
+  right: -75px;
+  color: #c82866;
+  font-size: 28px;
+}
+
+.listBadge.show-after::after {
+  display: block;
+}
+
+.selectHeader {
+  display: flex;
+  background: #002240;
+  justify-content: center;
+  position: relative;
+}
+
+.selectHeader--text {
+  background: #002240;
+  color: #fff;
+}
+
+.selectHeader--next {
+  all: unset;
+  color: #fff;
+  position: absolute;
+  right: 15px;
+  top: 20px;
+}
+
+.selectHeader--next::after {
+  content: "\2192";
+  margin-left: 0.5em;
+}
+
+.selectHeader--next:hover {
+  cursor: pointer;
+}
+
+.optionItem {
+  padding: 0 !important;
+  margin-bottom: 10px;
+  height: 125px;
+  width: 125px;
+  position: relative;
+}
+
+.optionText {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.optionText:hover {
+  opacity: 1;
+}
+
+.optionImage {
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden;
+  margin: 0 !important;
+}
+
+.currentSelectionContainer {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  height: 180px;
+}
+
+.selection {
+  width: calc(33.33% - 40px);
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.selection--attribute {
+  font-weight: bold;
+}
+
+.optionMain {
+  background: #fff;
+  margin-right: 120px;
+  position: relative;
+}
+
+.email-text {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.email-text:hover {
+  cursor: pointer;
+}
+
+.productBanner {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  width: 100vw;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 40px; 
+  overflow: hidden; 
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.productBanner--title {
+  margin-right: 200px;
+  text-overflow: ellipsis;
+}
+
+.productBanner--price {
+  color: #b60040
+}
+
+.productBanner--button {
+  background: #b60040;
+  color: #FFF;
+  position: relative;
+  display: inline-block;
+  padding: 0 30px;
+  line-height: 48px;
+  border-radius: 2px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
 }
