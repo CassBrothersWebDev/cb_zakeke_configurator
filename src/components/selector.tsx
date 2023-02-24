@@ -194,6 +194,8 @@ const Selector: FunctionComponent<{}> = () => {
     setCurrentSelection(updatedArray);
   }
 
+  let counter = 0;
+
   return (
     <Container>
       {/*
@@ -227,6 +229,7 @@ const Selector: FunctionComponent<{}> = () => {
           <List>
             {attributes &&
               attributes.map((attribute) => {
+                counter += 1;
                 return (
                   <ListItem
                     key={attribute.id}
@@ -237,7 +240,7 @@ const Selector: FunctionComponent<{}> = () => {
                     className="attributeListItem"
                   >
                     <div className="listBadge" id={attribute.id.toString()}>
-                      {attribute.displayOrder + 1}
+                      {counter}
                     </div>
                     {attribute.name}
                   </ListItem>
@@ -247,6 +250,25 @@ const Selector: FunctionComponent<{}> = () => {
         </div>
         <div className="optionMain">
           <div className="selectHeader">
+            <button
+              className="selectHeader--prev"
+              onClick={() => {
+                if (selectedAttribute) {
+                  const currentIndex = attributes.indexOf(selectedAttribute);
+                  
+                  var nextIndex;
+                  if (currentIndex === 0) {
+                    nextIndex = attributes.length - 1;
+                  } else {
+                    nextIndex = currentIndex - 1;
+                  }
+
+                  selectAttribute(attributes[nextIndex].id);
+                }
+              }}
+            >
+              Prev
+            </button>
             <h3 className="selectHeader--text">
               {selectedAttribute && selectedAttribute.name}
             </h3>
@@ -318,9 +340,13 @@ const Selector: FunctionComponent<{}> = () => {
         <h3 className="productBanner--title">{product?.name}</h3>
         <h3 className="productBanner--price">${price}</h3>
         {isAddToCartLoading ? (
-          <button className="productBanner--button" disabled={true}>Adding to cart...</button>
+          <button className="productBanner--button" disabled={true}>
+            Adding to cart...
+          </button>
         ) : (
-          <button className="productBanner--button" onClick={addToCart}>Add to cart</button>
+          <button className="productBanner--button" onClick={addToCart}>
+            Add to cart
+          </button>
         )}
       </div>
     </Container>

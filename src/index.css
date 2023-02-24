@@ -38,12 +38,14 @@ body {
 }
 .optionContainer {
   height: 50vh;
-  overflow: scroll;
+  overflow: auto;
   overflow-x: hidden;
   width: 100%;
   padding: 20px;
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
 }
 
 .listBadge {
@@ -96,6 +98,10 @@ body {
   top: 20px;
 }
 
+.selectHeader--prev {
+  display: none;
+}
+
 .selectHeader--next::after {
   content: "\2192";
   margin-left: 0.5em;
@@ -108,9 +114,16 @@ body {
 .optionItem {
   padding: 0 !important;
   margin-bottom: 10px;
-  height: 125px;
-  width: 125px;
+  height: 120px;
   position: relative;
+  flex-grow: 2;
+  max-width: 100%;
+}
+
+@media (max-width: 1840px) {
+  .optionItem {
+    height: 100px;
+  }
 }
 
 .optionText {
@@ -118,7 +131,7 @@ body {
   bottom: 0;
   left: 0;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   color: #fff;
   padding: 10px;
   opacity: 0;
@@ -134,6 +147,7 @@ body {
   height: 100% !important;
   overflow: hidden;
   margin: 0 !important;
+  aspect-ratio: 1/1;
 }
 
 .currentSelectionContainer {
@@ -180,8 +194,8 @@ body {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 40px; 
-  overflow: hidden; 
+  height: 40px;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -192,12 +206,12 @@ body {
 }
 
 .productBanner--price {
-  color: #b60040
+  color: #b60040;
 }
 
 .productBanner--button {
   background: #b60040;
-  color: #FFF;
+  color: #fff;
   position: relative;
   display: inline-block;
   padding: 0 30px;
@@ -208,4 +222,86 @@ body {
   font-size: 14px;
   cursor: pointer;
   border: none;
+}
+
+@media (max-width: 860px) {
+  .container {
+    display: flex !important;
+    flex-direction: column;
+    padding: 0 !important;
+    align-items: center;
+  }
+
+  .stepContainer {
+    display: none;
+  }
+
+  .optionMain {
+    margin: 0;
+  }
+
+  .optionContainer > ul {
+    flex-wrap: nowrap;
+    overflow: visible;
+    overflow-x: auto;
+    padding-bottom: 100px;
+    margin-bottom: 0;
+  }
+
+  .optionText {
+    all: unset;
+    position: absolute;
+    top: 100%;
+    opacity: 1 !important;
+  }
+
+  .optionItem {
+    width: 100px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
+
+  .optionContainer {
+    width: 100vw;
+    height: auto;
+  }
+
+  .currentSelectionContainer {
+    display: none;
+  }
+
+  .productBanner {
+    display: none;
+  }
+
+  .email-text {
+    display: none;
+  }
+
+  .selectHeader {
+    background: #fff;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2);
+  }
+  .selectHeader--text {
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: #000;
+    background: #fff;
+  }
+
+  .selectHeader--next {
+    color: #000;
+  }
+
+  .selectHeader--prev {
+    all: unset;
+    display: block;
+    position: absolute;
+    left: 15px;
+    top: 20px;
+  }
+
+  .selectHeader--prev::before {
+    content: "\2190";
+    margin-right: 0.5em;
+  }
 }

@@ -15,7 +15,7 @@ const zakekeEnvironment = new ZakekeEnvironment();
 
 const App: FunctionComponent<{}> = () => {
     return <ZakekeProvider environment={zakekeEnvironment}>
-        <Layout>
+        <Layout className='container'>
             <div className='viewerContainer'><ZakekeViewer /></div>
             <Selector />
         </Layout>
