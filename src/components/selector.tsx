@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { List, ListItem, ListItemImage } from "./list";
 import styled from "styled-components";
+import { SquareLoader } from "react-spinners";
 
 const Container = styled.div`
   height: 100%;
@@ -123,9 +124,17 @@ const Selector: FunctionComponent<{}> = () => {
     }
   }, [selectedGroupId]);
 
-  if (isSceneLoading || !groups || groups.length === 0)
-    return <span>Loading your Vanity...</span>;
-
+  if (isSceneLoading || !groups || groups.length === 0) {
+    return (
+      <div className="loading__container">
+        <SquareLoader color="#002240" />
+        
+          <span className="loading__text">Loading your Vanity Builder</span><br/>
+          <span>This may take a few moments</span>
+        
+      </div>
+    );
+  }
   // groups
   // -- attributes
   // -- -- options
@@ -255,7 +264,7 @@ const Selector: FunctionComponent<{}> = () => {
               onClick={() => {
                 if (selectedAttribute) {
                   const currentIndex = attributes.indexOf(selectedAttribute);
-                  
+
                   var nextIndex;
                   if (currentIndex === 0) {
                     nextIndex = attributes.length - 1;
