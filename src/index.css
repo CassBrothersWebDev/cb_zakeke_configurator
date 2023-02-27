@@ -298,6 +298,7 @@ body {
     position: absolute;
     top: 100%;
     opacity: 1 !important;
+    margin-top: 8px;
   }
 
   .optionItem {
