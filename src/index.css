@@ -15,7 +15,7 @@ body {
   height: 100%;
 }
 
-.loading__container{
+.loading__container {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -24,11 +24,12 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
- 
+  text-align: center;
 }
 
-.loading__text{
+.loading__text {
   margin-top: 50px;
+  font-weight: bold;
 }
 
 .selectContainer {
@@ -173,6 +174,11 @@ body {
   height: 180px;
 }
 
+.selections-list{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .selection {
   width: calc(33.33% - 40px);
   margin: 20px;
@@ -240,6 +246,29 @@ body {
   border: none;
 }
 
+.popup-trigger{
+  display: none;
+}
+
+.popup-close{
+  display: none;
+}
+.popup__title{
+  display: none;
+}
+
+.popup__productName{
+  display: none;
+}
+
+.popup-button{
+  display: none;
+}
+
+.popup-price{
+  display:none;
+}
+
 @media (max-width: 860px) {
   .container {
     display: flex !important;
@@ -282,15 +311,120 @@ body {
   }
 
   .currentSelectionContainer {
-    display: none;
+    position: fixed;
+    top: 50%;
+    right: -400%;
+    height: 100%;
+    width: 75%;
+    transform: translate(0, -50%);
+    display: block;
+    z-index: 1000; /* Place below other content */
+    background-color: white;
+    padding: 10px;
+    box-shadow: -2px 0px 2px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease-out, right 0.3s ease-out; /* Add a transition to the transform and right properties */
+
+  }
+
+  .currentSelectionContainer:target {
+    right:0;
+    transform: translate(0, -50%);
+  }
+
+  .popup-trigger{
+    all: unset;
+    display: flex;
+    gap: 10px;
+    position:fixed;
+    top: 30%;
+    right: -50px;
+    transform: rotate(-90deg) !important;
+    background: #002240;
+    color: #FFFFFF;
+    padding: 8px 10px;
+    border-radius: 24px 24px 0px 0px;
+  }
+
+  .popup-close{
+    all: unset;
+    display: block;
+    width: 44px;
+    height: 44px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: xxx-large
+  }
+
+  .popup__title{
+    display: block;
+    position: absolute;
+    top: 40px;
+  }
+
+  .popup__productName{
+    display: block;
+    position: absolute;
+    top: 10%;
+    left: 10px;
+    margin-right: 25%;
+    padding-bottom: 15px;
+    border-bottom: 1px solid black;
+
+  }
+
+  .popup-button{
+    display: block;
+    position: absolute;
+    bottom: 20%;
+  }
+
+  .popup-price{
+    display:block;
+    position: absolute;
+    bottom: 25%;
+    left: 10%;
+  }
+
+
+
+  .selections-list{
+    width: 100%;
+    position: absolute;
+    top: 20%;
+  }
+
+  .selection{
+    width: auto;
   }
 
   .productBanner {
-    display: none;
+    flex-direction: column;
+    overflow: visible;
+    margin-bottom: 20px;
   }
 
-  .email-text {
+  .productBanner--title {
     display: none;
+    padding: 20px;
+  }
+
+  .productBanner--price {
+    margin-right: 280px;
+  }
+
+  .productBanner--button {
+    width: 90%;
+  }
+
+  .email-text{
+    all: unset;
+    position: absolute;
+    bottom: 12%;
+    width: 80%;
+    padding: 8px 16px;
+    text-align: center;
+    border: 1px solid black;
   }
 
   .selectHeader {

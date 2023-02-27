@@ -128,10 +128,9 @@ const Selector: FunctionComponent<{}> = () => {
     return (
       <div className="loading__container">
         <SquareLoader color="#002240" />
-        
-          <span className="loading__text">Loading your Vanity Builder</span><br/>
-          <span>This may take a few moments</span>
-        
+        <span className="loading__text">Loading your Vanity Builder</span>
+        <br />
+        <span>This may take a few moments...</span>
       </div>
     );
   }
@@ -326,22 +325,53 @@ const Selector: FunctionComponent<{}> = () => {
             </List>
           </div>
 
-          <div className="currentSelectionContainer">
-            {currentSelection &&
-              currentSelection.map((selection) => {
-                return (
-                  <div className="selection">
-                    <span className="selection--attribute">
-                      {selection.attributeName}
-                    </span>
-                    <span className="selection--option">
-                      {selection.optionName}
-                    </span>
-                  </div>
-                );
-              })}
+          <a href="#currentSelectionContainer" className="popup-trigger">
+            Show Selection{" "}
+            <span className="material-symbols-outlined">list_alt</span>{" "}
+          </a>
+
+          <div
+            id="currentSelectionContainer"
+            className="currentSelectionContainer"
+          >
+            <h3 className="popup__title">My Vanity</h3>
+            <h4 className="popup__productName">{product?.name}</h4>
+            <a href="#" className="popup-close">
+              &times;
+            </a>
+            <div className="selections-list">
+              {currentSelection &&
+                currentSelection.map((selection) => {
+                  return (
+                    <div className="selection">
+                      <span className="selection--attribute">
+                        {selection.attributeName}
+                      </span>
+                      <span className="selection--option">
+                        {selection.optionName}
+                      </span>
+                    </div>
+                  );
+                })}
+            </div>
+            <h3 className="productBanner--price popup-price">${price}</h3>
+            {isAddToCartLoading ? (
+              <button
+                className="productBanner--button popup-button"
+                disabled={true}
+              >
+                Adding to cart...
+              </button>
+            ) : (
+              <button
+                className="productBanner--button popup-button"
+                onClick={addToCart}
+              >
+                Add to cart
+              </button>
+            )}
+            <span className="email-text">Email my design</span>
           </div>
-          <span className="email-text">Email my design</span>
         </div>
       </div>
 
