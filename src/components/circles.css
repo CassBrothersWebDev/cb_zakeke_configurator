@@ -1,0 +1,20 @@
+.circles-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 5px;
+  }
+  
+  .circle {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid gray;
+    
+    cursor: pointer;
+  }
+  
+  .circle.active {
+    background-color: gray;
+  }

@@ -181,7 +181,10 @@ body {
 .selections-list {
   display: flex;
   flex-wrap: wrap;
+  height: 400px;
+  overflow-y: scroll;
 }
+
 
 .selection {
   width: calc(33.33% - 40px);
@@ -272,6 +275,13 @@ body {
 
 .popup-price {
   display: none;
+}
+
+.selectHeader--center{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 @media (max-width: 860px) {
@@ -438,7 +448,7 @@ body {
   }
   .selectHeader--text {
     margin-top: 10px;
-    margin-bottom: 30px;
+    margin-bottom: 10px;
     color: #000;
     background: #fff;
   }

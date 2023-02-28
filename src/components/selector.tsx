@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { List, ListItem, ListItemImage } from "./list";
 import styled from "styled-components";
 import { SquareLoader } from "react-spinners";
+import Circles from "./circles";
+
 
 const Container = styled.div`
   height: 100%;
@@ -63,6 +65,9 @@ const Selector: FunctionComponent<{}> = () => {
   const [occhiali1Id, setOcchiali1Id] = useState<string | null>(null);
   const [occhiali2Id, setOcchiali2Id] = useState<string | null>(null);
   const [astuccioId, setAstuccioId] = useState<string | null>(null);
+
+  // State for currentOption circle indicators on mobile
+  const [currentOption, setCurrentOption] = useState(1);
 
   // Open the first group and the first step when loaded
   useEffect(() => {
@@ -288,14 +293,20 @@ const Selector: FunctionComponent<{}> = () => {
                   }
 
                   selectAttribute(attributes[currentIndex].id);
+                  setCurrentOption(currentIndex+1);
                 }
               }}
             >
               Prev
             </button>
+            <div className="selectHeader--center">
             <h3 className="selectHeader--text">
               {selectedAttribute && selectedAttribute.name}
             </h3>
+            <div className="selectHeader--circles">
+              <Circles currentOption={currentOption} optionsCount={attributes.length} />
+            </div>
+            </div>
             <button
               id="nextBtn"
               className="selectHeader--next"
@@ -319,6 +330,7 @@ const Selector: FunctionComponent<{}> = () => {
                   }
 
                   selectAttribute(attributes[currentIndex].id);
+                  setCurrentOption(currentIndex+1);
                 }
               }}
             >
