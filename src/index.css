@@ -137,6 +137,10 @@ body {
   max-width: 100%;
 }
 
+.hidden{
+  display: none !important;
+}
+
 @media (max-width: 1840px) {
   .optionItem {
     height: 100px;
@@ -194,6 +198,7 @@ body {
   background: #fff;
   margin-right: 120px;
   position: relative;
+  width: 100%;
 }
 
 .email-text {

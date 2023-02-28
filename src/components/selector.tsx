@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, useRef } from "react";
 import { useZakeke } from "zakeke-configurator-react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -204,6 +204,9 @@ const Selector: FunctionComponent<{}> = () => {
 
   let counter = 0;
 
+  const prevBtnObj = document.getElementById("prevBtn");
+  const nextBtnObj = document.getElementById("nextBtn");
+
   return (
     <Container>
       {/*
@@ -236,13 +239,18 @@ const Selector: FunctionComponent<{}> = () => {
 
           <List>
             {attributes &&
-              attributes.map((attribute) => {
+              attributes.map((attribute, index) => {
                 counter += 1;
                 return (
                   <ListItem
                     key={attribute.id}
                     onClick={() => {
                       selectAttribute(attribute.id);
+                      if (index !== attributes.length - 1) {
+                        nextBtnObj?.classList.remove("hidden");
+                      } else {
+                        nextBtnObj?.classList.add("hidden");
+                      }
                     }}
                     selected={selectedAttribute === attribute}
                     className="attributeListItem"
@@ -259,19 +267,27 @@ const Selector: FunctionComponent<{}> = () => {
         <div className="optionMain">
           <div className="selectHeader">
             <button
-              className="selectHeader--prev"
+              id="prevBtn"
+              className="selectHeader--prev hidden"
               onClick={() => {
                 if (selectedAttribute) {
-                  const currentIndex = attributes.indexOf(selectedAttribute);
-
-                  var nextIndex;
-                  if (currentIndex === 0) {
-                    nextIndex = attributes.length - 1;
-                  } else {
-                    nextIndex = currentIndex - 1;
+                  var currentIndex = attributes.indexOf(selectedAttribute);
+                  if (nextBtnObj) {
+                    nextBtnObj.classList.remove("hidden");
                   }
 
-                  selectAttribute(attributes[nextIndex].id);
+                  if (currentIndex === 0) {
+                    // At first index so do nothing and button should be hidden
+                  } else {
+                    currentIndex = currentIndex - 1;
+                    if (currentIndex === 0) {
+                      if (prevBtnObj) {
+                        prevBtnObj.classList.add("hidden");
+                      }
+                    }
+                  }
+
+                  selectAttribute(attributes[currentIndex].id);
                 }
               }}
             >
@@ -281,12 +297,28 @@ const Selector: FunctionComponent<{}> = () => {
               {selectedAttribute && selectedAttribute.name}
             </h3>
             <button
+              id="nextBtn"
               className="selectHeader--next"
               onClick={() => {
                 if (selectedAttribute) {
-                  const currentIndex = attributes.indexOf(selectedAttribute);
-                  const nextIndex = (currentIndex + 1) % attributes.length;
-                  selectAttribute(attributes[nextIndex].id);
+                  var currentIndex = attributes.indexOf(selectedAttribute);
+
+                  if (prevBtnObj) {
+                    prevBtnObj.classList.remove("hidden");
+                  }
+
+                  if (currentIndex !== attributes.length - 1) {
+                    // Has reached the final attribute
+                    currentIndex = currentIndex + 1;
+                  }
+
+                  if (currentIndex === attributes.length - 1) {
+                    if (nextBtnObj) {
+                      nextBtnObj.classList.add("hidden");
+                    }
+                  }
+
+                  selectAttribute(attributes[currentIndex].id);
                 }
               }}
             >
