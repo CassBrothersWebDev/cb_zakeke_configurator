@@ -6,7 +6,8 @@ import { List, ListItem, ListItemImage } from "./list";
 import styled from "styled-components";
 import { SquareLoader } from "react-spinners";
 import Circles from "./circles";
-
+import axios from "axios";
+import { addEmail } from "./addtoEmailList";
 
 const Container = styled.div`
   height: 100%;
@@ -37,6 +38,7 @@ const Selector: FunctionComponent<{}> = () => {
     hideMeshAndSaveState,
     restoreMeshVisibility,
     setCamera,
+    getPDF,
   } = useZakeke();
 
   const [currentSelection, setCurrentSelection] = useState<
@@ -68,6 +70,14 @@ const Selector: FunctionComponent<{}> = () => {
 
   // State for currentOption circle indicators on mobile
   const [currentOption, setCurrentOption] = useState(1);
+
+  // To set add to cart but disabled if all options are not chosen
+  const [disableCartBtn, setDisableCartBtn] = useState(true);
+
+  const [showingEmail, setShowingEmail] = useState(false);
+  const [loadingPDF, setLoadingPDF] = useState(false);
+  const [isChecked, setIsChecked] = useState(true);
+  const [email, setEmail] = useState("");
 
   // Open the first group and the first step when loaded
   useEffect(() => {
@@ -118,7 +128,7 @@ const Selector: FunctionComponent<{}> = () => {
         }, 2000);
       }
 
-      console.log({ second: astuccioGroup, selectedGroupId });
+      //console.log({ second: astuccioGroup, selectedGroupId });
     }
   }, [selectedGroupId, isSceneLoading]);
 
@@ -205,12 +215,65 @@ const Selector: FunctionComponent<{}> = () => {
     }
 
     setCurrentSelection(updatedArray);
+
+    var requiredLength = attributes.length;
+    if (accesoriesExists) {
+      requiredLength = attributes.length - 1;
+    }
+
+    if (updatedArray.length === requiredLength) {
+      setDisableCartBtn(false);
+    }
   }
 
   let counter = 0;
 
   const prevBtnObj = document.getElementById("prevBtn");
   const nextBtnObj = document.getElementById("nextBtn");
+
+  let accesoriesExists = false;
+
+  const downloadPdf = async () => {
+    try {
+      setLoadingPDF(true);
+      const pdfUrl = await getPDF(); // assuming getPdfUrl returns a promise that resolves with the URL of the PDF
+      const response = await axios.get(pdfUrl, { responseType: "blob" });
+      const blob = response.data;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "My-Custom-Vanity.pdf");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      toggleEmailPop();
+      setLoadingPDF(false);
+    } catch (error) {
+      console.error("Error while downloading PDF:", error);
+    }
+  };
+
+  const toggleEmailPop = () => {
+    const element = document.getElementsByClassName(
+      "popup-close"
+    )[0] as HTMLAnchorElement;
+    element.click();
+
+    setShowingEmail(!showingEmail);
+
+    setIsChecked(true);
+    // Start getURL
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    downloadPdf();
+
+    if (isChecked) {
+      // Add the email to the klaviyo list
+      addEmail(email);
+    }
+  };
 
   return (
     <Container>
@@ -246,6 +309,9 @@ const Selector: FunctionComponent<{}> = () => {
             {attributes &&
               attributes.map((attribute, index) => {
                 counter += 1;
+                if (attribute.name === "Accessories") {
+                  accesoriesExists = true;
+                }
                 return (
                   <ListItem
                     key={attribute.id}
@@ -293,19 +359,22 @@ const Selector: FunctionComponent<{}> = () => {
                   }
 
                   selectAttribute(attributes[currentIndex].id);
-                  setCurrentOption(currentIndex+1);
+                  setCurrentOption(currentIndex + 1);
                 }
               }}
             >
               Prev
             </button>
             <div className="selectHeader--center">
-            <h3 className="selectHeader--text">
-              {selectedAttribute && selectedAttribute.name}
-            </h3>
-            <div className="selectHeader--circles">
-              <Circles currentOption={currentOption} optionsCount={attributes.length} />
-            </div>
+              <h3 className="selectHeader--text">
+                {selectedAttribute && selectedAttribute.name}
+              </h3>
+              <div className="selectHeader--circles">
+                <Circles
+                  currentOption={currentOption}
+                  optionsCount={attributes.length}
+                />
+              </div>
             </div>
             <button
               id="nextBtn"
@@ -330,7 +399,7 @@ const Selector: FunctionComponent<{}> = () => {
                   }
 
                   selectAttribute(attributes[currentIndex].id);
-                  setCurrentOption(currentIndex+1);
+                  setCurrentOption(currentIndex + 1);
                 }
               }}
             >
@@ -400,21 +469,23 @@ const Selector: FunctionComponent<{}> = () => {
             </div>
             <h3 className="productBanner--price popup-price">${price}</h3>
             {isAddToCartLoading ? (
-              <button
-                className="productBanner--button popup-button"
-                disabled={true}
-              >
+              <button className="productBanner--button popup-button" disabled>
                 Adding to cart...
               </button>
             ) : (
               <button
                 className="productBanner--button popup-button"
                 onClick={addToCart}
+                disabled={disableCartBtn}
               >
                 Add to cart
               </button>
             )}
-            <span className="email-text">Email my design</span>
+
+            <span className="email-text" onClick={toggleEmailPop}>
+              <span>Download my design &nbsp;</span>
+              <span className="material-symbols-outlined">download</span>
+            </span>
           </div>
         </div>
       </div>
@@ -423,15 +494,70 @@ const Selector: FunctionComponent<{}> = () => {
         <h3 className="productBanner--title">{product?.name}</h3>
         <h3 className="productBanner--price">${price}</h3>
         {isAddToCartLoading ? (
-          <button className="productBanner--button" disabled={true}>
+          <button className="productBanner--button" disabled>
             Adding to cart...
           </button>
         ) : (
-          <button className="productBanner--button" onClick={addToCart}>
+          <button
+            className="productBanner--button"
+            onClick={addToCart}
+            disabled={disableCartBtn}
+          >
             Add to cart
           </button>
         )}
       </div>
+
+      {showingEmail && (
+        <div className="emailPopup__container">
+          {loadingPDF ? (
+            <div className="emailer__loading">
+              {/* isChecked ? (<h4>Sending the emails</h4>) : (<h4>Not sending emails</h4>) */}
+              <SquareLoader color="#002240" />
+              <h5>This may take a moment while we build your PDF</h5>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="emailer-form">
+              <a href="#" className="emailer-close" onClick={toggleEmailPop}>
+                ×
+              </a>
+              <h3 className="emailer__title">
+                Share your email and we will send you our Ultimate Vanity Guide
+                together with your design
+              </h3>
+
+              <input
+                type="email"
+                id="emailInput"
+                name="email"
+                required
+                placeholder="Your Email"
+                className="emailInput"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+
+              <label htmlFor="checkbox" className="emailer-check__label">
+                <input
+                  type="checkbox"
+                  id="checkbox"
+                  name="checkbox"
+                  checked={isChecked}
+                  onChange={() => {
+                    setIsChecked(!isChecked);
+                  }}
+                />
+                &nbsp;Subscribe to Cass Brothers newsletter
+              </label>
+              <button type="submit" className="emailer__btn">
+                Download my design{" "}
+                <span className="material-symbols-outlined">download</span>
+              </button>
+            </form>
+          )}
+        </div>
+      )}
     </Container>
   );
 };
