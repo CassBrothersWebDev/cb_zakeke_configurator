@@ -39,6 +39,7 @@ const Selector: FunctionComponent<{}> = () => {
     restoreMeshVisibility,
     setCamera,
     getPDF,
+    setCameraByName
   } = useZakeke();
 
   const [currentSelection, setCurrentSelection] = useState<
@@ -235,7 +236,7 @@ const Selector: FunctionComponent<{}> = () => {
 
   const downloadPdf = async () => {
     try {
-      setLoadingPDF(true);
+      
       const pdfUrl = await getPDF(); // assuming getPdfUrl returns a promise that resolves with the URL of the PDF
       const response = await axios.get(pdfUrl, { responseType: "blob" });
       const blob = response.data;
@@ -267,6 +268,7 @@ const Selector: FunctionComponent<{}> = () => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setLoadingPDF(true);
     downloadPdf();
 
     if (isChecked) {
@@ -322,6 +324,7 @@ const Selector: FunctionComponent<{}> = () => {
                       } else {
                         nextBtnObj?.classList.add("hidden");
                       }
+                      setCameraByName(attribute.name, false, true);
                     }}
                     selected={selectedAttribute === attribute}
                     className="attributeListItem"
@@ -360,6 +363,8 @@ const Selector: FunctionComponent<{}> = () => {
 
                   selectAttribute(attributes[currentIndex].id);
                   setCurrentOption(currentIndex + 1);
+                  setCameraByName(attributes[currentIndex].name, false, true);
+
                 }
               }}
             >
@@ -400,6 +405,8 @@ const Selector: FunctionComponent<{}> = () => {
 
                   selectAttribute(attributes[currentIndex].id);
                   setCurrentOption(currentIndex + 1);
+                  setCameraByName(attributes[currentIndex].name, false, true);
+
                 }
               }}
             >
