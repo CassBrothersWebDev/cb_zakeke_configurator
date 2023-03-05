@@ -65,12 +65,13 @@ input[type="checkbox"]:hover {
 .stepContainer {
   width: 110px;
   margin: 10px;
+  margin-top: 0;
 }
 
 .stepContainer > ul > li {
   width: 90px;
   height: 90px;
-  margin: 5px;
+  margin-bottom: 10px;
   background: #fff;
 }
 
@@ -79,7 +80,7 @@ input[type="checkbox"]:hover {
   width: 85%;
 }
 .optionContainer {
-  height: 50vh;
+  height: 40vh;
   overflow: auto;
   overflow-x: hidden;
   width: 100%;
@@ -105,6 +106,7 @@ input[type="checkbox"]:hover {
 .attributeListItem {
   position: relative;
 }
+
 
 .listBadge::after {
   display: none;
@@ -199,8 +201,10 @@ input[type="checkbox"]:hover {
 .currentSelectionContainer {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 20px;
-  height: 180px;
+  margin-top: 0px;
+  height: 170px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .selections-list {
@@ -210,14 +214,21 @@ input[type="checkbox"]:hover {
 }
 
 .selection {
-  width: calc(33.33% - 40px);
-  margin: 20px;
+  width: calc(33.33% - 20px);
+  margin: 10px;
   display: flex;
   flex-direction: column;
+
 }
 
 .selection--attribute {
   font-weight: bold;
+  font-size: 14px;
+}
+
+.selection--option{
+  font-size: 14px;
+
 }
 
 .optionMain {
