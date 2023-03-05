@@ -18,20 +18,38 @@ const Layout = styled.div`
 
 const zakekeEnvironment = new ZakekeEnvironment();
 
+function isWebGLSupported() {
+  try {
+    var canvas = document.createElement("canvas");
+    return !!window.WebGLRenderingContext && (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"));
+  } catch(e) {
+    return false;
+  }
+}
+
 const App: FunctionComponent<{}> = () => {
-  return (
-    <ZakekeProvider environment={zakekeEnvironment}>
-      <Layout className="container">
-        {
-          //<Overlay />
-        }
-        <div className="viewerContainer">
-          <ZakekeViewer />
-        </div>
-        <Selector />
-      </Layout>
-    </ZakekeProvider>
-  );
+  if (!isWebGLSupported()) {
+    return (
+      <div>
+        <h1>Error: WebGL is not supported on this browser.</h1>
+        <h3>Please try another broswer or update this browser to the latest version</h3>
+      </div>
+    );
+  } else {  
+    return (
+      <ZakekeProvider environment={zakekeEnvironment}>
+        <Layout className="container">
+          {
+            //<Overlay />
+          }
+          <div className="viewerContainer">
+            <ZakekeViewer />
+          </div>
+          <Selector />
+        </Layout>
+      </ZakekeProvider>
+    );
+  }
 };
 
 export default App;

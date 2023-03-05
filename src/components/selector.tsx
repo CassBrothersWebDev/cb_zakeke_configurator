@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useRef } from "react";
+import React, { FunctionComponent } from "react";
 import { useZakeke } from "zakeke-configurator-react";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -28,11 +28,8 @@ const Selector: FunctionComponent<{}> = () => {
     price,
     groups,
     selectOption,
-    loadComposition,
     addToCart,
-    currentTemplate,
     templates,
-    items,
     setTemplate,
     getMeshIDbyName,
     hideMeshAndSaveState,
