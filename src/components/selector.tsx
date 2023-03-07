@@ -504,7 +504,7 @@ const Selector: FunctionComponent<{}> = () => {
         ) : (
           <button
             className="productBanner--button"
-            onClick={addToCart}
+            onClick={() => addToCart}
             disabled={disableCartBtn}
           >
             Add to cart
