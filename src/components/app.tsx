@@ -39,9 +39,9 @@ const App: FunctionComponent<{}> = () => {
     return (
       <ZakekeProvider environment={zakekeEnvironment}>
         <Layout className="container">
-          {
-            //<Overlay />
-          }
+          
+            <Overlay />
+          
           <div className="viewerContainer">
             <ZakekeViewer />
           </div>
