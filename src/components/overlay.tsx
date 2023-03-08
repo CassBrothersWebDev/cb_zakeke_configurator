@@ -55,7 +55,7 @@ const Overlay: React.FC<OverlayProps> = () => {
                   <h3 className="step--heading">View your new vanity in 3D</h3>
                   <span className="step-text">
                     As you select your preferred options, our configurator will
-                    generate a 3D model that lets you visualize your vanity from
+                    generate a 3D model that lets you visualise your vanity from
                     every angle. This way, you can ensure that every aspect of
                     your vanity is just the way you want it before placing your
                     order.
@@ -69,9 +69,9 @@ const Overlay: React.FC<OverlayProps> = () => {
                 <div className="step-square">
                   <h3 className="step--heading">Finalise your design</h3>
                   <span className="step-text">
-                    Once you've personalized your vanity to your liking using
-                    our configurator and 3D visualization tools, it's time to
-                    finalize your design! At this stage, you can choose to
+                    Once you've personalised your vanity to your liking using
+                    our configurator and 3D visualisation tools, it's time to
+                    finalise your design! At this stage, you can choose to
                     download your design as a PDF for future reference or add it
                     directly to your cart to purchase your custom vanity.
                   </span>
@@ -110,7 +110,7 @@ const Overlay: React.FC<OverlayProps> = () => {
         <div className={`slide ${currentSlide === 1 ? "active" : ""}`}>
           {/* content for third slide */}
           <div className="slide-inner">
-            <div className="slide-inner__steps">
+            <div className="slide-inner__steps center">
               <div className="step-container">
                 <div className="img-container">
                   <img
@@ -120,7 +120,7 @@ const Overlay: React.FC<OverlayProps> = () => {
                   />
                 </div>
               </div>
-              <div className="step-container">
+              <div className="step-container col">
                 <h1>Vanity Samples</h1>
                 <span>
                   We offer sample boxes for all types of surfaces. Order yours
