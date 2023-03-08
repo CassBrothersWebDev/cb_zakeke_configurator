@@ -300,8 +300,20 @@ input[type="checkbox"]:hover {
   cursor: not-allowed;
 }
 
-.addToCart-loading{
-  overflow: visible;
+.addToCart-Loader{
+  all: unset;
+  position: absolute;
+  top: -1000%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 650px;
+  height: 400px;
+  background-color: #FFF;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  box-shadow: 4px 8px 21px 4px rgba(0, 0, 0, 0.5);
 }
 
 .popup-trigger {

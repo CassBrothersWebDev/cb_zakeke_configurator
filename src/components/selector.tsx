@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { List, ListItem, ListItemImage } from "./list";
 import styled from "styled-components";
-import { SquareLoader, FadeLoader } from "react-spinners";
+import { SquareLoader, MoonLoader } from "react-spinners";
 import Circles from "./circles";
 import axios from "axios";
 import { addEmail } from "./addtoEmailList";
@@ -506,8 +506,15 @@ const Selector: FunctionComponent<{}> = () => {
         <h3 className="productBanner--title">{product?.name}</h3>
         <h3 className="productBanner--price">${price}</h3>
         {isAddToCartLoading ? (
-          <div className="addToCart-loading">
-            <FadeLoader color="#b60040" height={10} width={2} margin={-5}/>
+          <div>
+            <div className="addToCart-Loader">
+              <MoonLoader color="#000" />
+              <span>Creating your custom vanity</span>
+              <span>This may take a few moments</span>
+            </div>
+          <button className="productBanner--button" disabled>
+            Adding to cart
+          </button>
           </div>
         ) : (
           <button
