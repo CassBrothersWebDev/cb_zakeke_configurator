@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { List, ListItem, ListItemImage } from "./list";
 import styled from "styled-components";
-import { SquareLoader } from "react-spinners";
+import { SquareLoader, FadeLoader } from "react-spinners";
 import Circles from "./circles";
 import axios from "axios";
 import { addEmail } from "./addtoEmailList";
@@ -76,6 +76,7 @@ const Selector: FunctionComponent<{}> = () => {
   const [loadingPDF, setLoadingPDF] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
   const [email, setEmail] = useState("");
+  const [pdfUrl, setPdfUrl] = useState('');
 
   // Open the first group and the first step when loaded
   useEffect(() => {
@@ -234,7 +235,7 @@ const Selector: FunctionComponent<{}> = () => {
   const downloadPdf = async () => {
     try {
       
-      const pdfUrl = await getPDF(); // assuming getPdfUrl returns a promise that resolves with the URL of the PDF
+      //const pdfUrl = await getPDF(); // assuming getPdfUrl returns a promise that resolves with the URL of the PDF
       const response = await axios.get(pdfUrl, { responseType: "blob" });
       const blob = response.data;
       const url = URL.createObjectURL(blob);
@@ -251,7 +252,7 @@ const Selector: FunctionComponent<{}> = () => {
     }
   };
 
-  const toggleEmailPop = () => {
+  const toggleEmailPop = async () => {
     const element = document.getElementsByClassName(
       "popup-close"
     )[0] as HTMLAnchorElement;
@@ -263,6 +264,9 @@ const Selector: FunctionComponent<{}> = () => {
     // Start getURL
   };
 
+  const savePDFUrl = async () => {
+    setPdfUrl(await getPDF())
+  }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoadingPDF(true);
@@ -486,7 +490,11 @@ const Selector: FunctionComponent<{}> = () => {
               </button>
             )}
 
-            <span className="email-text" onClick={toggleEmailPop}>
+            <span className="email-text" onClick={()=>{
+              //toggleEmailPop();
+              setShowingEmail(!showingEmail);
+              savePDFUrl()
+            }}>
               <span>Download my design &nbsp;</span>
               <span className="material-symbols-outlined">download</span>
             </span>
@@ -498,9 +506,9 @@ const Selector: FunctionComponent<{}> = () => {
         <h3 className="productBanner--title">{product?.name}</h3>
         <h3 className="productBanner--price">${price}</h3>
         {isAddToCartLoading ? (
-          <button className="productBanner--button" disabled>
-            Adding to cart...
-          </button>
+          <div className="addToCart-loading">
+            <FadeLoader color="#b60040" height={10} width={2} margin={-5}/>
+          </div>
         ) : (
           <button
             className="productBanner--button"
