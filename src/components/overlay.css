@@ -247,6 +247,7 @@
     width:31%;
     margin: 5px;
     height: 55%;
+    flex-basis: 35%;
   }
 
   .slide-inner{

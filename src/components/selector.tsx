@@ -105,6 +105,8 @@ const Selector: FunctionComponent<{}> = () => {
       setOcchiali2Id(occhiali2 ?? "");
       setAstuccioId(astuccio ?? "");
     }
+
+    window.dispatchEvent(new Event('resize'));
   }, [isSceneLoading]);
 
   useEffect(() => {
