@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import "./overlay.css"; // import the CSS file for styling
+import VanitySampleImg from "./images/VanitySampleBoxImageFour.png";
+import Vanity_1 from "./images/vanity-example-1.png";
+import Vanity_2 from "./images/vanity-example-2.png";
+import Vanity_3 from "./images/vanity-example-3.png";
+import Vanity_4 from "./images/vanity-example-4.png";
 
 interface OverlayProps {}
 
@@ -8,7 +13,7 @@ const Overlay: React.FC<OverlayProps> = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleNextClick = () => {
-    if (currentSlide < 3) {
+    if (currentSlide < 2) {
       // assuming there are 3 slides
       setCurrentSlide(currentSlide + 1);
     } else {
@@ -26,37 +31,58 @@ const Overlay: React.FC<OverlayProps> = () => {
         <div className={`slide ${currentSlide === 0 ? "active" : ""}`}>
           {/* content for first slide */}
           <div className="slide-inner">
-            <h1>How to build your custom vanity</h1>
+            <h1>How to use our 3D vanity configurator</h1>
             <div className="slide-inner__steps">
               <div className="step-container">
-                <h3 className="step--heading">1. Choose your configuration</h3>
-                <span>
-                  Measure your space so you know what size vanity will fit.
-                  Think about your plumbing spots, and if you want doors or
-                  drawers (or both!).
-                </span>
+                <div className="step-numberBox">
+                  <span className="step-number">1</span>
+                </div>
+                <div className="step-square">
+                  <h3 className="step--heading">Choose your options</h3>
+                  <span className="step-text">
+                    Choose from a variety of options to create a truly unique
+                    vanity. Our configurator is designed to make the process
+                    easy and intuitive, so you can see how each selection
+                    affects the overall look and feel of your vanity.
+                  </span>
+                </div>
               </div>
               <div className="step-container">
-                <h3 className="step--heading">2. Pick your finishes</h3>
-                <span>
-                  From your cabinet and benchtop finish to your handle and basin
-                  options. These are the first things that you will see, and
-                  where your style shines most.
-                </span>
+                <div className="step-numberBox">
+                  <span className="step-number">2</span>
+                </div>
+                <div className="step-square">
+                  <h3 className="step--heading">View your new vanity in 3D</h3>
+                  <span className="step-text">
+                    As you select your preferred options, our configurator will
+                    generate a 3D model that lets you visualize your vanity from
+                    every angle. This way, you can ensure that every aspect of
+                    your vanity is just the way you want it before placing your
+                    order.
+                  </span>
+                </div>
               </div>
               <div className="step-container">
-                <h3 className="step--heading">3. Accessorise</h3>
-                <span>
-                  Enhance your bathroom experience with the addition of vanity
-                  accessories. These include in-drawer power points, vanity
-                  bins, drawer lighting, and more!
-                </span>
+                <div className="step-numberBox">
+                  <span className="step-number">3</span>
+                </div>
+                <div className="step-square">
+                  <h3 className="step--heading">Finalise your design</h3>
+                  <span className="step-text">
+                    Once you've personalized your vanity to your liking using
+                    our configurator and 3D visualization tools, it's time to
+                    finalize your design! At this stage, you can choose to
+                    download your design as a PDF for future reference or add it
+                    directly to your cart to purchase your custom vanity.
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
+        {/*
         <div className={`slide ${currentSlide === 1 ? "active" : ""}`}>
-          {/* content for second slide */}
+          // content for second slide 
           <div className="slide-inner">
             <h1>Build your dream vanity with the Visual Shopper</h1>
             <div className="slide-inner__steps">
@@ -80,33 +106,51 @@ const Overlay: React.FC<OverlayProps> = () => {
             </div>
           </div>
         </div>
-        <div className={`slide ${currentSlide === 2 ? "active" : ""}`}>
+        */}
+        <div className={`slide ${currentSlide === 1 ? "active" : ""}`}>
           {/* content for third slide */}
           <div className="slide-inner">
             <div className="slide-inner__steps">
               <div className="step-container">
-                <div className="img-container"></div>
+                <div className="img-container">
+                  <img
+                    src={VanitySampleImg}
+                    alt="Vanity Samples"
+                    className="samples-img"
+                  />
+                </div>
               </div>
               <div className="step-container">
-                <h1>Vanity Sample Pack</h1>
+                <h1>Vanity Samples</h1>
                 <span>
-                  Our vanity sample packs allow you to choose a selection of
-                  cabinet finishes and benchtop finishes from leading brands
-                  including ADP and Timberline.
+                  We offer sample boxes for all types of surfaces. Order yours
+                  today to see and feel the quality for yourself!
                 </span>
               </div>
             </div>
           </div>
         </div>
-        <div className={`slide ${currentSlide === 3 ? "active" : ""}`}>
+        <div className={`slide ${currentSlide === 2 ? "active" : ""}`}>
           {/* content for third slide */}
           <div className="slide-inner">
-            <h1>Our customers designs</h1>
-            <div className="slide-inner__steps">
-              <div className="img-container squared"></div>
-              <div className="img-container squared"></div>
-              <div className="img-container squared"></div>
-              <div className="img-container squared"></div>
+            <h1>Inspirational designs</h1>
+            <div className="image-row">
+              <img
+                src={Vanity_1}
+                alt="Vanity Example 1"
+              />
+              <img
+                src={Vanity_2}
+                alt="Vanity Example 2"
+              />
+              <img
+                src={Vanity_3}
+                alt="Vanity Example 3"
+              />
+              <img
+                src={Vanity_4}
+                alt="Vanity Example 4"
+              />
             </div>
           </div>
         </div>
