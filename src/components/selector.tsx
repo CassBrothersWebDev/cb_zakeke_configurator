@@ -515,7 +515,8 @@ const Selector: FunctionComponent<{}> = () => {
               <span>This may take a few moments</span>
             </div>
           <button className="productBanner--button" disabled>
-            Adding to cart
+            Adding to cart&nbsp;
+            <span className="material-symbols-outlined"> shopping_cart </span>
           </button>
           </div>
         ) : (
@@ -529,7 +530,8 @@ const Selector: FunctionComponent<{}> = () => {
             }
             disabled={disableCartBtn}
           >
-            Add to cart
+            Add to cart&nbsp;
+            <span className="material-symbols-outlined"> shopping_cart </span>
           </button>
         )}
       </div>
