@@ -376,6 +376,16 @@ input[type="checkbox"]:hover {
     margin-bottom: 0;
   }
 
+  .optionContainer{
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+    overflow: scroll; /* Chrome, Safari and Opera */
+  }
+
+  .optionContainer::-webkit-scrollbar {
+    display: none; /* Hide scrollbar in Chrome, Safari and Opera */
+  }
+
   .optionText {
     all: unset;
     position: absolute;
@@ -386,7 +396,8 @@ input[type="checkbox"]:hover {
   }
 
   .optionItem {
-    width: 100px;
+    width: 80px;
+    height: 80px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   }
 
