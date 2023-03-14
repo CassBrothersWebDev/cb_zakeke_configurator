@@ -365,6 +365,7 @@ input[type="checkbox"]:hover {
 
   .optionMain {
     margin: 0;
+    
   }
 
   .optionContainer > ul {
@@ -437,6 +438,7 @@ input[type="checkbox"]:hover {
     top: 10px;
     right: 10px;
     font-size: xxx-large;
+    z-index: 99;
   }
 
   .popup__title {
@@ -492,12 +494,16 @@ input[type="checkbox"]:hover {
   }
 
   .productBanner--title {
-    display: none;
+    font-size: 12px;
     padding: 20px;
+    margin: auto;
   }
 
   .productBanner--price {
-    margin-right: 280px;
+    margin-right: 20px;
+    position: fixed;
+    top:0;
+    right:0;
   }
 
   .productBanner--button {
