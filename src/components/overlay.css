@@ -56,8 +56,11 @@
   margin: 30px;
   font-size: 24px;
   cursor: pointer;
-  padding: 10px;
-  border-radius: 5px;
+  padding:  15px 45px;
+  background-color: #FFF;
+  color: #0A2136;
+  border: 2px solid #0A2136;
+
 }
 
 .next-btn::after {
@@ -66,8 +69,10 @@
 }
 
 .next-btn:hover{
-  background-color: rgb(218, 218, 218);
+  background: #0A2136;
+  color: #FFF;
 }
+
 
 .close-btn{
   all: unset;
@@ -82,11 +87,17 @@
   align-items: center;
   width: 40px;
   height: 40px;
+  background-color: #FFF;
+  color: #0A2136;
+  border: 2px solid #0A2136;
 }
 
 .close-btn:hover{
-  background-color: rgb(218, 218, 218);
+  background: #0A2136;
+  color: #FFF;
 }
+
+
 
 
 .slide-inner{
@@ -218,7 +229,9 @@
     margin: 15px;
     font-size: 14px;
     font-weight: 600;
+    
   }
+
 
   .close-btn{
     margin: 15px;
