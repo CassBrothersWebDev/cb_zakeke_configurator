@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react";
 import { useZakeke } from "zakeke-configurator-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useEffect } from "react";
 import { List, ListItem, ListItemImage } from "./list";
 import styled from "styled-components";
@@ -42,6 +42,7 @@ const Selector: FunctionComponent<{}> = () => {
   const [currentSelection, setCurrentSelection] = useState<
     currentSelectionObj[]
   >([]);
+  const closeRef = useRef<HTMLAnchorElement>(null);
 
   // Keep saved the ID and not the refereces, they will change on each update
   const [selectedGroupId, selectGroup] = useState<number | null>(null);
@@ -267,6 +268,8 @@ const Selector: FunctionComponent<{}> = () => {
   };
 
   const savePDFUrl = async () => {
+    
+    
     setPdfUrl(await getPDF())
   }
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -495,7 +498,11 @@ const Selector: FunctionComponent<{}> = () => {
             <span className="email-text" onClick={()=>{
               //toggleEmailPop();
               setShowingEmail(!showingEmail);
-              savePDFUrl()
+              savePDFUrl();
+              const close = document.querySelector(".popup-close") as HTMLAnchorElement;
+              if(close){
+                close.click();
+              }
             }}>
               <span>Download my design &nbsp;</span>
               <span className="material-symbols-outlined">download</span>

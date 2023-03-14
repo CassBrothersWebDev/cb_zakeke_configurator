@@ -111,7 +111,7 @@ const Overlay: React.FC<OverlayProps> = () => {
           {/* content for third slide */}
           <div className="slide-inner">
             <div className="slide-inner__steps center">
-              <div className="step-container">
+              <div className="step-container  step-2-container">
                 <div className="img-container">
                   <img
                     src={VanitySampleImg}
@@ -120,7 +120,7 @@ const Overlay: React.FC<OverlayProps> = () => {
                   />
                 </div>
               </div>
-              <div className="step-container col">
+              <div className="step-container col  step-2-container">
                 <h1>Vanity Samples</h1>
                 <span>
                   We offer sample boxes for all types of surfaces. Order yours
