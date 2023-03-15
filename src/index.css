@@ -144,12 +144,22 @@ input[type="checkbox"]:hover {
 }
 
 .selectHeader--prev {
-  display: none;
+  all: unset;
+  color: #fff;
+  position: absolute;
+  left: 15px;
+  top: 20px;
+  cursor: pointer;
 }
 
 .selectHeader--next::after {
   content: "\2192";
   margin-left: 0.5em;
+}
+
+.selectHeader--prev::before {
+  content: "\2190";
+  margin-right: 0.5em;
 }
 
 .selectHeader--next:hover {
@@ -243,11 +253,14 @@ input[type="checkbox"]:hover {
   position: absolute;
   right: 20px;
   bottom: 10px;
-  font-size: 14px;
+  font-size: 12px;
   display: flex;
   justify-content: center;
-  align-items: end;
-  border-bottom: 1px solid black;
+  align-items: center;
+  border: 1px solid #b60040;
+  color: #b60040;
+  font-weight: 800;
+  padding: 5px;
 }
 
 .email-text:hover {
@@ -260,7 +273,7 @@ input[type="checkbox"]:hover {
   left: 0;
   width: 100vw;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
   height: 40px;
   overflow: visible;
@@ -268,13 +281,21 @@ input[type="checkbox"]:hover {
   white-space: nowrap;
 }
 
+.productBanner--group{
+  display: flex;
+  align-items: center;
+}
+
 .productBanner--title {
-  margin-right: 200px;
+  margin-left: 40px;
   text-overflow: ellipsis;
+  
 }
 
 .productBanner--price {
   color: #b60040;
+  margin-right: 40px;
+  font-size:26px;
 }
 
 .productBanner--button {
@@ -294,6 +315,7 @@ input[type="checkbox"]:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 160px;
 }
 
 .productBanner--button[disabled] {
@@ -377,13 +399,13 @@ input[type="checkbox"]:hover {
   }
 
   .optionContainer{
+    overflow: auto;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
-    overflow: scroll; /* Chrome, Safari and Opera */
   }
 
   .optionContainer::-webkit-scrollbar {
-    display: none; /* Hide scrollbar in Chrome, Safari and Opera */
+    width: 0 /* Hide scrollbar in Chrome, Safari and Opera */
   }
 
   .optionText {
@@ -515,10 +537,12 @@ input[type="checkbox"]:hover {
     position: fixed;
     top:0;
     right:0;
+    font-size:26px;
   }
 
   .productBanner--button {
-    width: 90%;
+    width: 250px;
+    margin-right: 0;
   }
 
   .email-text {
@@ -532,6 +556,7 @@ input[type="checkbox"]:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+
   }
 
   .selectHeader {

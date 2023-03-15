@@ -108,6 +108,7 @@ const Selector: FunctionComponent<{}> = () => {
     }
 
     window.dispatchEvent(new Event('resize'));
+    //setCameraByName('starting point', false, true);
   }, [isSceneLoading]);
 
   useEffect(() => {
@@ -330,6 +331,11 @@ const Selector: FunctionComponent<{}> = () => {
                       } else {
                         nextBtnObj?.classList.add("hidden");
                       }
+                      if (index !== 0) {
+                        prevBtnObj?.classList.remove("hidden");
+                      } else {
+                        prevBtnObj?.classList.add("hidden");
+                      }
                       setCameraByName(attribute.name, false, true);
                     }}
                     selected={selectedAttribute === attribute}
@@ -513,7 +519,9 @@ const Selector: FunctionComponent<{}> = () => {
 
       <div className="productBanner">
         <h3 className="productBanner--title">{product?.name}</h3>
+        <div className="productBanner--group">
         <h3 className="productBanner--price">${price}</h3>
+        
         {isAddToCartLoading ? (
           <div>
             <div className="addToCart-Loader">
@@ -541,6 +549,7 @@ const Selector: FunctionComponent<{}> = () => {
             <span className="material-symbols-outlined"> shopping_cart </span>
           </button>
         )}
+        </div>
       </div>
 
       {showingEmail && (
@@ -557,8 +566,7 @@ const Selector: FunctionComponent<{}> = () => {
                 ×
               </a>
               <h3 className="emailer__title">
-                Share your email and we will send you our Ultimate Vanity Guide
-                together with your design
+                Enter your email to download your custom vanity design
               </h3>
 
               <input
