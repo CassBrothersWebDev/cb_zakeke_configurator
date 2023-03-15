@@ -247,6 +247,7 @@ input[type="checkbox"]:hover {
   margin-right: 120px;
   position: relative;
   width: 100%;
+  margin-bottom: 5%;
 }
 
 .email-text {
