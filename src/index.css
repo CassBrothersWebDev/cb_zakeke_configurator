@@ -251,6 +251,11 @@ input[type="checkbox"]:hover {
   height: 80vh;
 }
 
+.options-unavailabletext{
+  margin: -10px 0 5px 0;
+  font-size: 12px;
+}
+
 .email-text {
   position: absolute;
   right: 20px;

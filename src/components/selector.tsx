@@ -70,6 +70,9 @@ const Selector: FunctionComponent<{}> = () => {
   // State for currentOption circle indicators on mobile
   const [currentOption, setCurrentOption] = useState(1);
 
+  // True for when undermount basin has been selected
+  const [isUndermountBasin, setIsUndermountBasin] = useState(false);
+
   // To set add to cart but disabled if all options are not chosen
   const [disableCartBtn, setDisableCartBtn] = useState(true);
 
@@ -181,18 +184,19 @@ const Selector: FunctionComponent<{}> = () => {
     }
   }
 
-  function handleNewSelection(selection: string) {
+  function handleNewSelection(selection: any) {
+  
     let newObject: currentSelectionObj = {
       attributeId: 0,
       attributeName: "selectedAttribute",
-      optionName: selection,
+      optionName: selection.name,
     };
 
     if (selectedAttribute) {
       newObject = {
         attributeId: selectedAttribute.id,
         attributeName: selectedAttribute.name,
-        optionName: selection,
+        optionName: selection.name,
       };
     }
 
@@ -215,6 +219,8 @@ const Selector: FunctionComponent<{}> = () => {
       if (addCheckElement) {
         addCheckElement.classList.add("show-after");
       }
+      
+      
     }
 
     setCurrentSelection(updatedArray);
@@ -227,6 +233,60 @@ const Selector: FunctionComponent<{}> = () => {
     if (updatedArray.length === requiredLength) {
       setDisableCartBtn(false);
     }
+
+    // Get the current benchtop selection
+    const currentBenchtopSelection = updatedArray.find(item => item.attributeName === "Benchtop");
+
+    /*
+    *     Handle selecting the option with underbasins
+    */
+    if(selectedAttribute?.name === "Basins"){
+      // If selection.description === "Undermount Basin", then change the Benchtop to the same style undermount version
+      if(selection.description === "Undermount Basin") {
+        //console.log("THIS IS AN UNDERMOUNT BASIN")
+        setIsUndermountBasin(true);
+        // Select the correct benchtop with hole
+          // Get the id for the currently selected benchtop style with hole
+          const benchtopAttributeObj = groups[0].attributes.find(item => item.name === "Benchtop");
+          const selectedBenchtopUndermount = benchtopAttributeObj?.options.filter(item => item.name === currentBenchtopSelection?.optionName).find(item => item.description === "Undermount");
+          //console.log(selectedBenchtopUndermount);
+          // Set correct id for benchtop with hole
+          if(selectedBenchtopUndermount){
+            selectOption(selectedBenchtopUndermount.id);
+          } else {
+            // If no benchtop selected yet, set to the id of the first available undermount benchtop
+            const undermountBenchtop = benchtopAttributeObj?.options.find(item => item.description === "Undermount");
+            if (undermountBenchtop){
+              selectOption(undermountBenchtop.id)
+            }
+          }
+        // Then select the chosen undermount basin
+        selectOption(selection.id)
+      }else {
+        //This is not an undermount basin
+        setIsUndermountBasin(false);
+        // Select the correct benchtop with NO hole
+          // Get the id for the currently selected benchtop style with NO hole
+          const benchtopAttributeObj = groups[0].attributes.find(item => item.name === "Benchtop");
+          const selectedBenchtopOvermount = benchtopAttributeObj?.options.filter(item => item.name === currentBenchtopSelection?.optionName).find(item => item.description !== "Undermount");
+          // Set correct id for benchtop with NO hole
+          if (selectedBenchtopOvermount){
+            selectOption(selectedBenchtopOvermount.id)
+          } else {
+            // If no benchtop selected yet, set to the id of the first available overmount benchtop
+            const undermountBenchtop = benchtopAttributeObj?.options.find(item => item.description === "Overmount");
+            if (undermountBenchtop){
+              selectOption(undermountBenchtop.id)
+            }
+          }
+        // Then select the chosen top mounted basin
+        selectOption(selection.id)
+      }
+    } else {
+      selectOption(selection.id);
+    }
+  
+
   }
 
   let counter = 0;
@@ -306,6 +366,7 @@ const Selector: FunctionComponent<{}> = () => {
                     key={step.id}
                     onClick={() => selectStep(step.id)}
                     selected={selectedStep === step}
+                    available={true}
                   >
                     Step: {step.name}
                   </ListItem>
@@ -340,6 +401,7 @@ const Selector: FunctionComponent<{}> = () => {
                     }}
                     selected={selectedAttribute === attribute}
                     className="attributeListItem"
+                    available = {true}
                   >
                     <div className="listBadge" id={attribute.id.toString()}>
                       {counter}
@@ -426,34 +488,64 @@ const Selector: FunctionComponent<{}> = () => {
             </button>
           </div>
           <div className="optionContainer">
+            {isUndermountBasin && (selectedAttribute?.name === "Benchtop" || selectedAttribute?.name === "Tapholes") &&
+              <p className="options-unavailabletext">* Some options are unavailable with undermount basins</p>
+            }
             <List>
               {selectedAttribute &&
                 selectedAttribute.options.map((option) => {
-                  return (
-                    <div
-                      onMouseEnter={handleMouseEnter}
-                      onMouseLeave={handleMouseLeave}
-                    >
-                      <ListItem
-                        key={option.id}
-                        onClick={() => {
-                          selectOption(option.id);
-                          handleNewSelection(option.name);
-                        }}
-                        selected={option.selected}
-                        className="optionItem"
+                    let itemAvailable = true;
+                    let unavailableTitle = '';
+                    if(isUndermountBasin){
+                      // If an Undermount Basin is selected
+                      // Do not show the silk surface overmount benchtops
+                      if (option.name.split(" ")[0] === "SilkSurface" && option.description === "Overmount"){
+                        return;
+                      }
+                      // Disable the other overmount benchtops
+                      if(option.description === "Overmount"){
+                      itemAvailable=false;
+                      unavailableTitle = 'Unavailable with Undermount Basin'
+                      }
+                    } else {
+                      // If there is no Undermount basin selected
+                      // Do not show the undermount silksurface benchtops
+                      if (option.name.split(" ")[0] === "SilkSurface" && option.description === "Undermount"){
+                        return;
+                      }
+                    }
+                    
+                    return (
+                      <div
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
                       >
-                        {option.imageUrl && (
-                          <ListItemImage
-                            className="optionImage"
-                            src={option.imageUrl}
-                          />
-                        )}
-                        <div className="optionText">{option.name}</div>
-                      </ListItem>
-                    </div>
-                  );
+                        <ListItem
+                          key={option.id}
+                          onClick={() => {
+                            if(itemAvailable){
+                              handleNewSelection(option);
+                            }
+                            //selectOption(option.id);
+                            console.log(selectedAttribute);
+                          }}
+                          selected={option.selected}
+                          className="optionItem"
+                          available={itemAvailable}
+                          title={unavailableTitle}
+                        >
+                          {option.imageUrl && (
+                            <ListItemImage
+                              className="optionImage"
+                              src={option.imageUrl}
+                            />
+                          )}
+                          <div className="optionText">{option.name}</div>
+                        </ListItem>
+                      </div>
+                    );
                 })}
+              
             </List>
           </div>
 
@@ -462,7 +554,7 @@ const Selector: FunctionComponent<{}> = () => {
             <span className="material-symbols-outlined">list_alt</span>{" "}
           </a>
 
-          <div
+          <div        
             id="currentSelectionContainer"
             className="currentSelectionContainer"
           >
