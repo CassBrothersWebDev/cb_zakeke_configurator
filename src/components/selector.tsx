@@ -246,6 +246,7 @@ const Selector: FunctionComponent<{}> = () => {
     /*
      *     Handle selecting the option with underbasins
      */
+    /*
     if (selectedAttribute?.name === "Basins") {
       // If selection.description === "Double" set isDoubleBasin to hide some taphole options
       // console.log(selection.description);
@@ -373,6 +374,7 @@ const Selector: FunctionComponent<{}> = () => {
     } else {
       selectOption(selection.id);
     }
+    */
   }
 
   const updateSelectionArray = (newSelectionObj: any) => {
@@ -613,6 +615,8 @@ const Selector: FunctionComponent<{}> = () => {
                 selectedAttribute.options.map((option) => {
                   let itemAvailable = true;
                   let unavailableTitle = "";
+                  console.log(option);
+                  /*
                   if (option.name === "Alpha Top") {
                     return;
                   }
@@ -671,7 +675,7 @@ const Selector: FunctionComponent<{}> = () => {
                       return;
                     }
                   }
-
+                  */
                   return (
                     <div
                       onMouseEnter={handleMouseEnter}
@@ -683,7 +687,7 @@ const Selector: FunctionComponent<{}> = () => {
                           if (itemAvailable) {
                             handleNewSelection(option);
                           }
-                          //selectOption(option.id);
+                          selectOption(option.id);
                           //console.log(selectedAttribute);
                         }}
                         selected={option.selected}
