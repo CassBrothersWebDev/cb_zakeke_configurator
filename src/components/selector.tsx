@@ -616,6 +616,9 @@ const Selector: FunctionComponent<{}> = () => {
                   let itemAvailable = true;
                   let unavailableTitle = "";
                   console.log(option);
+                  if (!option.enabled) {
+                    itemAvailable = false;
+                  }
                   /*
                   if (option.name === "Alpha Top") {
                     return;
