@@ -8,6 +8,7 @@ import { SquareLoader, MoonLoader } from "react-spinners";
 import Circles from "./circles";
 import axios from "axios";
 import { addEmail } from "./addtoEmailList";
+import QRCodeComponent from "./QrCodeComponent";
 
 const Container = styled.div`
   height: 100%;
@@ -36,13 +37,17 @@ const Selector: FunctionComponent<{}> = () => {
     restoreMeshVisibility,
     setCamera,
     getPDF,
-    setCameraByName
+    setCameraByName,
+    getQrCodeArUrl,
+    getMobileArUrl,
   } = useZakeke();
 
   const [currentSelection, setCurrentSelection] = useState<
     currentSelectionObj[]
   >([]);
   const closeRef = useRef<HTMLAnchorElement>(null);
+
+  const [qrUrl, setQrUrl] = useState<string | Blob>("");
 
   // Keep saved the ID and not the refereces, they will change on each update
   const [selectedGroupId, selectGroup] = useState<number | null>(null);
@@ -72,6 +77,8 @@ const Selector: FunctionComponent<{}> = () => {
 
   // True for when undermount basin has been selected
   const [isUndermountBasin, setIsUndermountBasin] = useState(false);
+  const [isDoubleAlphaBasin, setIsDoubleAlphaBasin] = useState(false);
+  const [isSingleAlphaBasin, setIsSingleAlphaBasin] = useState(false);
 
   // To set add to cart but disabled if all options are not chosen
   const [disableCartBtn, setDisableCartBtn] = useState(true);
@@ -80,7 +87,7 @@ const Selector: FunctionComponent<{}> = () => {
   const [loadingPDF, setLoadingPDF] = useState(false);
   const [isChecked, setIsChecked] = useState(true);
   const [email, setEmail] = useState("");
-  const [pdfUrl, setPdfUrl] = useState('');
+  const [pdfUrl, setPdfUrl] = useState("");
 
   // Open the first group and the first step when loaded
   useEffect(() => {
@@ -110,7 +117,7 @@ const Selector: FunctionComponent<{}> = () => {
       setAstuccioId(astuccio ?? "");
     }
 
-    window.dispatchEvent(new Event('resize'));
+    window.dispatchEvent(new Event("resize"));
     //setCameraByName('starting point', false, true);
   }, [isSceneLoading]);
 
@@ -185,7 +192,6 @@ const Selector: FunctionComponent<{}> = () => {
   }
 
   function handleNewSelection(selection: any) {
-  
     let newObject: currentSelectionObj = {
       attributeId: 0,
       attributeName: "selectedAttribute",
@@ -200,7 +206,7 @@ const Selector: FunctionComponent<{}> = () => {
       };
     }
 
-    const updatedArray = currentSelection.map((obj) => {
+    let updatedArray = currentSelection.map((obj) => {
       if (obj.attributeId === newObject.attributeId) {
         return newObject;
       } else {
@@ -219,8 +225,6 @@ const Selector: FunctionComponent<{}> = () => {
       if (addCheckElement) {
         addCheckElement.classList.add("show-after");
       }
-      
-      
     }
 
     setCurrentSelection(updatedArray);
@@ -235,59 +239,161 @@ const Selector: FunctionComponent<{}> = () => {
     }
 
     // Get the current benchtop selection
-    const currentBenchtopSelection = updatedArray.find(item => item.attributeName === "Benchtop");
+    const currentBenchtopSelection = updatedArray.find(
+      (item) => item.attributeName === "Benchtop"
+    );
 
     /*
-    *     Handle selecting the option with underbasins
-    */
-    if(selectedAttribute?.name === "Basins"){
-      // If selection.description === "Undermount Basin", then change the Benchtop to the same style undermount version
-      if(selection.description === "Undermount Basin") {
+     *     Handle selecting the option with underbasins
+     */
+    if (selectedAttribute?.name === "Basins") {
+      // If selection.description === "Double" set isDoubleBasin to hide some taphole options
+      // console.log(selection.description);
+      if (selection.description === "Double") {
+        setIsDoubleAlphaBasin(true);
+        setIsSingleAlphaBasin(false);
+        //console.log("THIS IS AN ALPHA DOUBLE");
+        const benchtopAttributeObj = groups[0].attributes.find(
+          (item) => item.name === "Benchtop"
+        );
+        const alphaBenchObj = benchtopAttributeObj?.options.find(
+          (item) => item.name === "Alpha Top"
+        );
+        //console.log(noTapholeObj);
+        if (alphaBenchObj) {
+          selectOption(alphaBenchObj.id);
+          updateSelectionArray(alphaBenchObj);
+        }
+      } else {
+        setIsDoubleAlphaBasin(false);
+      }
+      if (selection.description === "Single") {
+        setIsSingleAlphaBasin(true);
+        setIsDoubleAlphaBasin(false);
+        //console.log("THIS IS AN ALPHA SINGLE");
+        const benchtopAttributeObj = groups[0].attributes.find(
+          (item) => item.name === "Benchtop"
+        );
+        const alphaBenchObj = benchtopAttributeObj?.options.find(
+          (item) => item.name === "Alpha Top"
+        );
+        //console.log(noTapholeObj);
+        if (alphaBenchObj) {
+          selectOption(alphaBenchObj.id);
+          updateSelectionArray(alphaBenchObj);
+        }
+      } else {
+        setIsSingleAlphaBasin(false);
+      }
+      // If selection.description === "Undermount", then change the Benchtop to the same style undermount version
+      if (
+        selection.description === "Undermount" &&
+        selection.attribute.name === "Basins"
+      ) {
         //console.log("THIS IS AN UNDERMOUNT BASIN")
         setIsUndermountBasin(true);
         // Select the correct benchtop with hole
-          // Get the id for the currently selected benchtop style with hole
-          const benchtopAttributeObj = groups[0].attributes.find(item => item.name === "Benchtop");
-          const selectedBenchtopUndermount = benchtopAttributeObj?.options.filter(item => item.name === currentBenchtopSelection?.optionName).find(item => item.description === "Undermount");
-          //console.log(selectedBenchtopUndermount);
-          // Set correct id for benchtop with hole
-          if(selectedBenchtopUndermount){
-            selectOption(selectedBenchtopUndermount.id);
-          } else {
-            // If no benchtop selected yet, set to the id of the first available undermount benchtop
-            const undermountBenchtop = benchtopAttributeObj?.options.find(item => item.description === "Undermount");
-            if (undermountBenchtop){
-              selectOption(undermountBenchtop.id)
-            }
+        // Get the id for the currently selected benchtop style with hole
+        const benchtopAttributeObj = groups[0].attributes.find(
+          (item) => item.name === "Benchtop"
+        );
+        const selectedBenchtopUndermount = benchtopAttributeObj?.options
+          .filter((item) => item.name === currentBenchtopSelection?.optionName)
+          .find((item) => item.description === "Undermount");
+        //console.log(selectedBenchtopUndermount);
+        // Set correct id for benchtop with hole
+        if (selectedBenchtopUndermount) {
+          selectOption(selectedBenchtopUndermount.id);
+          //updateSelectionArray(selectedBenchtopUndermount);
+        } else {
+          // If no benchtop selected yet, set to the id of the first available undermount benchtop
+          const undermountBenchtop = benchtopAttributeObj?.options.find(
+            (item) => item.description === "Undermount"
+          );
+          if (undermountBenchtop) {
+            selectOption(undermountBenchtop.id);
+            updateSelectionArray(undermountBenchtop);
           }
+        }
         // Then select the chosen undermount basin
-        selectOption(selection.id)
-      }else {
+        selectOption(selection.id);
+
+        // Check if centre taphole was chosen and if so, change to No Taphole option
+        const currentTapholeSelection = updatedArray.find(
+          (item) => item.attributeName === "Tapholes"
+        );
+        if (currentTapholeSelection?.optionName === "1 Taphole Centre") {
+          const tapholeAttributeObj = groups[0].attributes.find(
+            (item) => item.name === "Tapholes"
+          );
+          const noTapholeObj = tapholeAttributeObj?.options
+            .filter((item) => item.name === "No Taphole")
+            .find((item) => item.description === "Overmount");
+          //console.log(noTapholeObj);
+          if (noTapholeObj) {
+            selectOption(noTapholeObj.id);
+          }
+        }
+      } else {
         //This is not an undermount basin
         setIsUndermountBasin(false);
         // Select the correct benchtop with NO hole
-          // Get the id for the currently selected benchtop style with NO hole
-          const benchtopAttributeObj = groups[0].attributes.find(item => item.name === "Benchtop");
-          const selectedBenchtopOvermount = benchtopAttributeObj?.options.filter(item => item.name === currentBenchtopSelection?.optionName).find(item => item.description !== "Undermount");
-          // Set correct id for benchtop with NO hole
-          if (selectedBenchtopOvermount){
-            selectOption(selectedBenchtopOvermount.id)
-          } else {
-            // If no benchtop selected yet, set to the id of the first available overmount benchtop
-            const undermountBenchtop = benchtopAttributeObj?.options.find(item => item.description === "Overmount");
-            if (undermountBenchtop){
-              selectOption(undermountBenchtop.id)
-            }
+        // Get the id for the currently selected benchtop style with NO hole
+        const benchtopAttributeObj = groups[0].attributes.find(
+          (item) => item.name === "Benchtop"
+        );
+        const selectedBenchtopOvermount = benchtopAttributeObj?.options
+          .filter((item) => item.name === currentBenchtopSelection?.optionName)
+          .find((item) => item.description !== "Undermount");
+        // Set correct id for benchtop with NO hole, check if it is "Alpha Top" first, and set to first overmount top if it is
+        if (selectedBenchtopOvermount?.name === "Alpha Top") {
+          // If no benchtop selected yet, set to the id of the first available overmount benchtop
+          const overmountBenchtop = benchtopAttributeObj?.options.find(
+            (item) => item.description === "Overmount"
+          );
+          if (overmountBenchtop) {
+            selectOption(overmountBenchtop.id);
+            updateSelectionArray(overmountBenchtop);
           }
+        } else if (selectedBenchtopOvermount) {
+          selectOption(selectedBenchtopOvermount.id);
+          //console.log(selectedBenchtopOvermount);
+        } else {
+          // If no benchtop selected yet, set to the id of the first available overmount benchtop
+          const overmountBenchtop = benchtopAttributeObj?.options.find(
+            (item) => item.description === "Overmount"
+          );
+          if (overmountBenchtop) {
+            selectOption(overmountBenchtop.id);
+          }
+        }
         // Then select the chosen top mounted basin
-        selectOption(selection.id)
+        selectOption(selection.id);
       }
     } else {
       selectOption(selection.id);
     }
-  
-
   }
+
+  const updateSelectionArray = (newSelectionObj: any) => {
+    //console.log(newSelectionObj);
+    const newArray = [...currentSelection];
+    const objectToUpdateIndex = newArray.findIndex(
+      (obj) => obj.attributeName === newSelectionObj.attribute.name
+    );
+
+    if (objectToUpdateIndex !== -1) {
+      const updatedObject = {
+        ...newArray[objectToUpdateIndex],
+        optionName: newSelectionObj.name,
+      };
+      //console.log(updatedObject);
+      newArray[objectToUpdateIndex] = updatedObject;
+      setCurrentSelection(newArray);
+    }
+
+
+  };
 
   let counter = 0;
 
@@ -298,7 +404,6 @@ const Selector: FunctionComponent<{}> = () => {
 
   const downloadPdf = async () => {
     try {
-      
       //const pdfUrl = await getPDF(); // assuming getPdfUrl returns a promise that resolves with the URL of the PDF
       const response = await axios.get(pdfUrl, { responseType: "blob" });
       const blob = response.data;
@@ -329,10 +434,8 @@ const Selector: FunctionComponent<{}> = () => {
   };
 
   const savePDFUrl = async () => {
-    
-    
-    setPdfUrl(await getPDF())
-  }
+    setPdfUrl(await getPDF());
+  };
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setLoadingPDF(true);
@@ -401,7 +504,7 @@ const Selector: FunctionComponent<{}> = () => {
                     }}
                     selected={selectedAttribute === attribute}
                     className="attributeListItem"
-                    available = {true}
+                    available={true}
                   >
                     <div className="listBadge" id={attribute.id.toString()}>
                       {counter}
@@ -438,7 +541,6 @@ const Selector: FunctionComponent<{}> = () => {
                   selectAttribute(attributes[currentIndex].id);
                   setCurrentOption(currentIndex + 1);
                   setCameraByName(attributes[currentIndex].name, false, true);
-
                 }
               }}
             >
@@ -480,7 +582,6 @@ const Selector: FunctionComponent<{}> = () => {
                   selectAttribute(attributes[currentIndex].id);
                   setCurrentOption(currentIndex + 1);
                   setCameraByName(attributes[currentIndex].name, false, true);
-
                 }
               }}
             >
@@ -488,64 +589,119 @@ const Selector: FunctionComponent<{}> = () => {
             </button>
           </div>
           <div className="optionContainer">
-            {isUndermountBasin && (selectedAttribute?.name === "Benchtop" || selectedAttribute?.name === "Tapholes") &&
-              <p className="options-unavailabletext">* Some options are unavailable with undermount basins</p>
-            }
+            {isUndermountBasin &&
+              (selectedAttribute?.name === "Benchtop" ||
+                selectedAttribute?.name === "Tapholes") && (
+                <p className="options-unavailabletext">
+                  * Some options are unavailable with undermount basins
+                </p>
+              )}
+            {(isSingleAlphaBasin || isDoubleAlphaBasin) &&
+              selectedAttribute?.name === "Benchtop" && (
+                <div className="alphaBasin-overlay">
+                  <div className="alphaBasin-overlay--content">
+                    <h4>Benchtop option not compatible with Alpha Basin</h4>
+                    <h6>
+                      To select a different benchtop, please choose a basin that
+                      is compatible with your preferred benchtop option.
+                    </h6>
+                  </div>
+                </div>
+              )}
             <List>
               {selectedAttribute &&
                 selectedAttribute.options.map((option) => {
-                    let itemAvailable = true;
-                    let unavailableTitle = '';
-                    if(isUndermountBasin){
-                      // If an Undermount Basin is selected
-                      // Do not show the silk surface overmount benchtops
-                      if (option.name.split(" ")[0] === "SilkSurface" && option.description === "Overmount"){
-                        return;
-                      }
-                      // Disable the other overmount benchtops
-                      if(option.description === "Overmount"){
-                      itemAvailable=false;
-                      unavailableTitle = 'Unavailable with Undermount Basin'
-                      }
-                    } else {
-                      // If there is no Undermount basin selected
-                      // Do not show the undermount silksurface benchtops
-                      if (option.name.split(" ")[0] === "SilkSurface" && option.description === "Undermount"){
-                        return;
-                      }
+                  let itemAvailable = true;
+                  let unavailableTitle = "";
+                  if (option.name === "Alpha Top") {
+                    return;
+                  }
+                  if (isUndermountBasin) {
+                    // If an Undermount Basin is selected
+                    // Do not show the silk surface overmount benchtops
+                    if (
+                      option.name.split(" ")[0] === "SilkSurface" &&
+                      option.description === "Overmount"
+                    ) {
+                      return;
                     }
-                    
-                    return (
-                      <div
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
+                    // Disable the other overmount benchtops
+                    if (
+                      option.description === "Overmount" &&
+                      (option.attribute.name === "Benchtop" ||
+                        option.attribute.name === "Tapholes")
+                    ) {
+                      itemAvailable = false;
+                      unavailableTitle = "Unavailable with Undermount Basin";
+                    }
+                  } else {
+                    // If there is no Undermount basin selected
+                    // Do not show the undermount silksurface benchtops
+                    if (
+                      option.name.split(" ")[0] === "SilkSurface" &&
+                      option.description.split(" ")[0] === "Undermount"
+                    ) {
+                      return;
+                    }
+                  }
+
+                  if (isDoubleAlphaBasin) {
+                    // If a Double Alpha basin is selected only show the double taps
+                    if (
+                      option.description !== "Double" &&
+                      option.attribute.name === "Tapholes"
+                    ) {
+                      return;
+                    }
+                  } else if (isSingleAlphaBasin) {
+                    // If a Single Alpha basin is selected show only the single taps
+                    if (
+                      option.description !== "Single" &&
+                      option.attribute.name === "Tapholes"
+                    ) {
+                      return;
+                    }
+                  } else {
+                    // If neither of the Alpha basins are selected show all non alpha options for taps
+                    if (
+                      (option.description === "Single" ||
+                        option.description === "Double") &&
+                      option.attribute.name === "Tapholes"
+                    ) {
+                      return;
+                    }
+                  }
+
+                  return (
+                    <div
+                      onMouseEnter={handleMouseEnter}
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      <ListItem
+                        key={option.id}
+                        onClick={() => {
+                          if (itemAvailable) {
+                            handleNewSelection(option);
+                          }
+                          //selectOption(option.id);
+                          //console.log(selectedAttribute);
+                        }}
+                        selected={option.selected}
+                        className="optionItem"
+                        available={itemAvailable}
+                        title={unavailableTitle}
                       >
-                        <ListItem
-                          key={option.id}
-                          onClick={() => {
-                            if(itemAvailable){
-                              handleNewSelection(option);
-                            }
-                            //selectOption(option.id);
-                            console.log(selectedAttribute);
-                          }}
-                          selected={option.selected}
-                          className="optionItem"
-                          available={itemAvailable}
-                          title={unavailableTitle}
-                        >
-                          {option.imageUrl && (
-                            <ListItemImage
-                              className="optionImage"
-                              src={option.imageUrl}
-                            />
-                          )}
-                          <div className="optionText">{option.name}</div>
-                        </ListItem>
-                      </div>
-                    );
+                        {option.imageUrl && (
+                          <ListItemImage
+                            className="optionImage"
+                            src={option.imageUrl}
+                          />
+                        )}
+                        <div className="optionText">{option.name}</div>
+                      </ListItem>
+                    </div>
+                  );
                 })}
-              
             </List>
           </div>
 
@@ -554,7 +710,7 @@ const Selector: FunctionComponent<{}> = () => {
             <span className="material-symbols-outlined">list_alt</span>{" "}
           </a>
 
-          <div        
+          <div
             id="currentSelectionContainer"
             className="currentSelectionContainer"
           >
@@ -593,15 +749,34 @@ const Selector: FunctionComponent<{}> = () => {
               </button>
             )}
 
-            <span className="email-text" onClick={()=>{
-              //toggleEmailPop();
-              setShowingEmail(!showingEmail);
-              savePDFUrl();
-              const close = document.querySelector(".popup-close") as HTMLAnchorElement;
-              if(close){
-                close.click();
-              }
-            }}>
+            {/*
+              <button onClick={()=>{
+                getMobileArUrl().then(res => {
+                  if(res){
+                    setQrUrl(res);
+                    console.log(res);
+                  }
+                });
+
+              }}/>
+
+            <QRCodeComponent url={qrUrl} />
+            */}
+
+            <span
+              className="email-text"
+              onClick={() => {
+                //toggleEmailPop();
+                setShowingEmail(!showingEmail);
+                savePDFUrl();
+                const close = document.querySelector(
+                  ".popup-close"
+                ) as HTMLAnchorElement;
+                if (close) {
+                  close.click();
+                }
+              }}
+            >
               <span>Download my design &nbsp;</span>
               <span className="material-symbols-outlined">download</span>
             </span>
@@ -612,35 +787,37 @@ const Selector: FunctionComponent<{}> = () => {
       <div className="productBanner">
         <h3 className="productBanner--title">{product?.name}</h3>
         <div className="productBanner--group">
-        <h3 className="productBanner--price">${price}</h3>
-        
-        {isAddToCartLoading ? (
-          <div>
-            <div className="addToCart-Loader">
-              <MoonLoader color="#000" />
-              <span>Creating your custom vanity</span>
-              <span>This may take a few moments</span>
+          <h3 className="productBanner--price">${price}</h3>
+
+          {isAddToCartLoading ? (
+            <div>
+              <div className="addToCart-Loader">
+                <MoonLoader color="#000" />
+                <span>Creating your custom vanity</span>
+                <span>This may take a few moments</span>
+              </div>
+              <button className="productBanner--button" disabled>
+                Adding to cart&nbsp;
+                <span className="material-symbols-outlined">
+                  {" "}
+                  shopping_cart{" "}
+                </span>
+              </button>
             </div>
-          <button className="productBanner--button" disabled>
-            Adding to cart&nbsp;
-            <span className="material-symbols-outlined"> shopping_cart </span>
-          </button>
-          </div>
-        ) : (
-          <button
-            className="productBanner--button"
-            onClick={(event) => 
-             { event.preventDefault();
-              addToCart({"":""});
-              console.log("add to cart");
-            }
-            }
-            disabled={disableCartBtn}
-          >
-            Add to cart&nbsp;
-            <span className="material-symbols-outlined"> shopping_cart </span>
-          </button>
-        )}
+          ) : (
+            <button
+              className="productBanner--button"
+              onClick={(event) => {
+                event.preventDefault();
+                addToCart({ "": "" });
+                console.log("add to cart");
+              }}
+              disabled={disableCartBtn}
+            >
+              Add to cart&nbsp;
+              <span className="material-symbols-outlined"> shopping_cart </span>
+            </button>
+          )}
         </div>
       </div>
 

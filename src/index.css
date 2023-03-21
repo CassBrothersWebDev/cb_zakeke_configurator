@@ -90,6 +90,7 @@ input[type="checkbox"]:hover {
   justify-content: center;
   flex-wrap: wrap;
   align-items: center;
+  position: relative;
 }
 
 .listBadge {
@@ -726,4 +727,30 @@ input[type="checkbox"]:hover {
   right: 10px;
   font-size: xxx-large;
   cursor: pointer;
+}
+
+.alphaBasin-overlay{
+  position: absolute;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
+  height: 200%;
+  width:100%;
+  background-color: white;
+  opacity: 0.7;
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  
+}
+
+.alphaBasin-overlay--content{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #FFF;
+  opacity: 1;
+  width: 50%;
+  text-align: center;
 }
