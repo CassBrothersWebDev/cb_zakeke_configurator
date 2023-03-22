@@ -375,6 +375,8 @@ const Selector: FunctionComponent<{}> = () => {
       selectOption(selection.id);
     }
     */
+
+    
   }
 
   const updateSelectionArray = (newSelectionObj: any) => {
@@ -616,9 +618,17 @@ const Selector: FunctionComponent<{}> = () => {
                   let itemAvailable = true;
                   let unavailableTitle = "";
                   console.log(option);
-                  if (!option.enabled) {
+
+                  if (!option.enabled && option.attribute.name === "Benchtop") {
                     itemAvailable = false;
                   }
+                  if(!option.enabled && option.attribute.name === "Tapholes") {
+                    return;
+                  }
+                  if(!option.enabled && option.name.split(" ")[0] === "SilkSurface") {
+                    return;
+                  }
+
                   /*
                   if (option.name === "Alpha Top") {
                     return;
@@ -689,8 +699,8 @@ const Selector: FunctionComponent<{}> = () => {
                         onClick={() => {
                           if (itemAvailable) {
                             handleNewSelection(option);
+                            selectOption(option.id);
                           }
-                          selectOption(option.id);
                           //console.log(selectedAttribute);
                         }}
                         selected={option.selected}
