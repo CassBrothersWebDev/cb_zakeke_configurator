@@ -19,6 +19,7 @@ interface currentSelectionObj {
   attributeId: number;
   attributeName: string;
   optionName: string;
+  show: boolean;
 }
 
 const Selector: FunctionComponent<{}> = () => {
@@ -85,6 +86,16 @@ const Selector: FunctionComponent<{}> = () => {
 
   // To set add to cart but disabled if all options are not chosen
   const [disableCartBtn, setDisableCartBtn] = useState(true);
+  const [requiredArr, setRequiredArr] = useState([
+    "Cabinet Colour",
+    "Basins",
+    "Benchtop",
+    "Handles",
+    "Tapholes",
+  ]);
+  const [requiredAttributesToRemove, setRequiredAttributesToRemove] = useState([
+    "",
+  ]);
 
   const [showingEmail, setShowingEmail] = useState(false);
   const [loadingPDF, setLoadingPDF] = useState(false);
@@ -155,6 +166,27 @@ const Selector: FunctionComponent<{}> = () => {
     }
   }, [selectedGroupId]);
 
+  // Enabling 'Add To Cart' button
+  useEffect(() => {
+    let correctAttributes = attributes
+      .filter((attribute) => attribute.name !== "Accessories")
+      .map((attribute) => attribute.name);
+    correctAttributes = correctAttributes.filter(
+      (value) => !requiredAttributesToRemove.includes(value)
+    );
+
+    const isEqual = correctAttributes.every((value) => {
+      return currentSelection.some((obj) => obj.attributeName === value);
+    });
+    //console.log(correctAttributes);
+    //console.log(isEqual)
+    if (isEqual) {
+      setDisableCartBtn(false);
+    } else {
+      setDisableCartBtn(true);
+    }
+  }, [requiredAttributesToRemove, currentSelection]);
+
   if (isSceneLoading || !groups || groups.length === 0) {
     return (
       <div className="loading__container">
@@ -199,6 +231,7 @@ const Selector: FunctionComponent<{}> = () => {
       attributeId: 0,
       attributeName: "selectedAttribute",
       optionName: selection.name,
+      show: true,
     };
 
     if (selectedAttribute) {
@@ -206,6 +239,7 @@ const Selector: FunctionComponent<{}> = () => {
         attributeId: selectedAttribute.id,
         attributeName: selectedAttribute.name,
         optionName: selection.name,
+        show: true,
       };
     }
 
@@ -217,29 +251,78 @@ const Selector: FunctionComponent<{}> = () => {
       }
     });
 
+    const attributeButtonObj = document.getElementById(
+      newObject.attributeId.toString()
+    );
+
     if (
       !updatedArray.some((obj) => obj.attributeId === newObject.attributeId)
     ) {
       updatedArray.push(newObject);
 
-      const addCheckElement = document.getElementById(
-        newObject.attributeId.toString()
-      );
-      if (addCheckElement) {
-        addCheckElement.classList.add("show-after");
+      if (attributeButtonObj) {
+        attributeButtonObj.classList.add("show-after");
       }
     }
 
+    if (
+      selection.attribute.name === "Basins" &&
+      selection.description === "Counter"
+    ) {
+      // Remove ticks from Taphole and Benchtop options
+      const benchtopObj = updatedArray.find(
+        (attribute) => attribute.attributeName === "Benchtop"
+      );
+      if (benchtopObj) {
+        const benchtopBtn = document.getElementById(
+          benchtopObj.attributeId.toString()
+        );
+        if (benchtopBtn) {
+          benchtopBtn.classList.remove("show-after");
+        }
+      }
+
+      const tapholeObj = updatedArray.find(
+        (attribute) => attribute.attributeName === "Tapholes"
+      );
+      if (tapholeObj) {
+        const tapholeBtn = document.getElementById(
+          tapholeObj.attributeId.toString()
+        );
+        if (tapholeBtn) {
+          tapholeBtn.classList.remove("show-after");
+        }
+      }
+
+      // Remove Taphole and Benchtop from current selection display
+      const attributesToRemove = ["Benchtop", "Tapholes"];
+      //const filteredArray = updatedArray.filter(attribute => !attributesToRemove.includes(attribute.attributeName));
+      const newArray = updatedArray.map((attribute) => {
+        if (attributesToRemove.includes(attribute.attributeName)) {
+          return { ...attribute, show: false };
+        } else {
+          return attribute;
+        }
+      });
+      updatedArray = newArray;
+    } else {
+      //Un-hide all selected options
+      const newArray = updatedArray.map((attribute) => {
+          return { ...attribute, show: true };
+      });
+      updatedArray = newArray;
+      //Re-add the ticks on the boxes if they exist in the newest array
+      updatedArray.forEach((attribute) => {
+        const btn = document.getElementById(attribute.attributeId.toString());
+        if (btn) {
+          if (!btn.classList.contains("show-after")) {
+            btn.classList.add("show-after");
+          }
+        }
+      });
+    }
+
     setCurrentSelection(updatedArray);
-
-    var requiredLength = attributes.length;
-    if (accesoriesExists) {
-      requiredLength = attributes.length - 1;
-    }
-
-    if (updatedArray.length === requiredLength) {
-      setDisableCartBtn(false);
-    }
 
     // Get the current benchtop selection
     const currentBenchtopSelection = updatedArray.find(
@@ -382,7 +465,6 @@ const Selector: FunctionComponent<{}> = () => {
     /*
      *     Handle selecting the same benchtop when swapping from over/under basins
      */
-
     if (selectedAttribute?.name === "Basins") {
       // Check if the basin selection is a full counter basin
       if (
@@ -390,8 +472,10 @@ const Selector: FunctionComponent<{}> = () => {
         selection.attribute.name === "Basins"
       ) {
         setFullCountertopBasin(true);
+        setRequiredAttributesToRemove(["Benchtop", "Tapholes"]);
       } else {
         setFullCountertopBasin(false);
+        setRequiredAttributesToRemove([""]);
       }
 
       // If selection.description === "Undermount", then change the Benchtop to the same style undermount version
@@ -561,7 +645,7 @@ const Selector: FunctionComponent<{}> = () => {
                     attribute.name === "Benchtop"
                   ) {
                     attributeAvailable = false;
-                    unavailableTitle = "Invalid with current Basin"
+                    unavailableTitle = "Invalid with current Basin";
                   }
                 }
                 return (
@@ -826,16 +910,20 @@ const Selector: FunctionComponent<{}> = () => {
             <div className="selections-list">
               {currentSelection &&
                 currentSelection.map((selection) => {
-                  return (
-                    <div className="selection">
-                      <span className="selection--attribute">
-                        {selection.attributeName}
-                      </span>
-                      <span className="selection--option">
-                        {selection.optionName}
-                      </span>
-                    </div>
-                  );
+                  if (selection.show){
+                    return (
+                      <div className="selection">
+                        <span className="selection--attribute">
+                          {selection.attributeName}
+                        </span>
+                        <span className="selection--option">
+                          {selection.optionName}
+                        </span>
+                      </div>
+                    );
+                  } else {
+                    return
+                  }
                 })}
             </div>
             <h3 className="productBanner--price popup-price">${price}</h3>
