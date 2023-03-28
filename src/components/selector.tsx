@@ -324,15 +324,16 @@ const Selector: FunctionComponent<{}> = () => {
 
     setCurrentSelection(updatedArray);
 
-    // Get the current benchtop selection
-    const currentBenchtopSelection = updatedArray.find(
-      (item) => item.attributeName === "Benchtop"
-    );
+    
 
     /*
      *     Handle selecting the option with underbasins
      */
     /*
+    // Get the current benchtop selection
+    const currentBenchtopSelection = updatedArray.find(
+      (item) => item.attributeName === "Benchtop"
+    );
     if (selectedAttribute?.name === "Basins") {
       // If selection.description === "Double" set isDoubleBasin to hide some taphole options
       // console.log(selection.description);
@@ -473,33 +474,46 @@ const Selector: FunctionComponent<{}> = () => {
       ) {
         setFullCountertopBasin(true);
         setRequiredAttributesToRemove(["Benchtop", "Tapholes"]);
+
+
       } else {
         setFullCountertopBasin(false);
         setRequiredAttributesToRemove([""]);
-      }
 
+        // Update benchtop to match chosen basin
+        updateSelectedBenchtop(selection.description);
+        
+        
+      }
+      
+      // Then select the chosen basin
+      selectOption(selection.id);
+
+      /*
       // If selection.description === "Undermount", then change the Benchtop to the same style undermount version
       if (
         selection.description === "Undermount" &&
         selection.attribute.name === "Basins"
       ) {
-        //This is an undermount basin that has been selected
-        // Select the correct benchtop with hole
-        // Get the id for the currently selected benchtop style with hole
-        const benchtopAttributeObj = groups[0].attributes.find(
-          (item) => item.name === "Benchtop"
-        );
-        const selectedBenchtopUndermount = benchtopAttributeObj?.options
-          .filter((item) => item.name === currentBenchtopSelection?.optionName)
-          .find((item) => item.description === "Undermount");
-        //console.log(selectedBenchtopUndermount);
-        // Set correct id for benchtop with hole
-        if (selectedBenchtopUndermount) {
-          selectOption(selectedBenchtopUndermount.id);
-          //updateSelectionArray(selectedBenchtopUndermount);
-        } else {
-          // If no benchtop selected yet, set to the id of the first available undermount benchtop
-        }
+        ////This is an undermount basin that has been selected
+        //// Select the correct benchtop with hole
+        //// Get the id for the currently selected benchtop style with hole
+        //const benchtopAttributeObj = groups[0].attributes.find(
+        //  (item) => item.name === "Benchtop"
+        //);
+        //const selectedBenchtopUndermount = benchtopAttributeObj?.options
+        //  .filter((item) => item.name === currentBenchtopSelection?.optionName)
+        //  .find((item) => item.description === "Undermount");
+        ////console.log(selectedBenchtopUndermount);
+        //// Set correct id for benchtop with hole
+        //if (selectedBenchtopUndermount) {
+        //  selectOption(selectedBenchtopUndermount.id);
+        //  //updateSelectionArray(selectedBenchtopUndermount);
+        //} else {
+        //  // If no benchtop selected yet, set to the id of the first available undermount benchtop
+        //}
+        updateSelectedBenchtop(selection.description);
+        
         // Then select the chosen undermount basin
         selectOption(selection.id);
       } else {
@@ -522,25 +536,28 @@ const Selector: FunctionComponent<{}> = () => {
         // Then select the chosen top mounted basin
         selectOption(selection.id);
       }
+      */
     }
   }
 
-  const updateSelectionArray = (newSelectionObj: any) => {
-    //console.log(newSelectionObj);
-    const newArray = [...currentSelection];
-    const objectToUpdateIndex = newArray.findIndex(
-      (obj) => obj.attributeName === newSelectionObj.attribute.name
-    );
+  const updateSelectedBenchtop = (type: string) => {
+    const currentBenchtopSelection = currentSelection.find(
+      (item) => item.attributeName === "Benchtop"
+      );
+      // Return all benchtops
+      const benchtopAttributeObj = groups[0].attributes.find(
+        (item) => item.name === "Benchtop"
+        );
+        
+        const correctedBenchtop = benchtopAttributeObj?.options
+        .filter((item) => item.name === currentBenchtopSelection?.optionName)
+        .find((item) => item.description === type);
 
-    if (objectToUpdateIndex !== -1) {
-      const updatedObject = {
-        ...newArray[objectToUpdateIndex],
-        optionName: newSelectionObj.name,
-      };
-      //console.log(updatedObject);
-      newArray[objectToUpdateIndex] = updatedObject;
-      setCurrentSelection(newArray);
-    }
+        // Set correct id for new benchtop
+        if (correctedBenchtop) {
+          console.log(correctedBenchtop);
+          selectOption(correctedBenchtop.id);
+        } 
   };
 
   let counter = 0;
