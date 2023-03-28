@@ -168,17 +168,21 @@ const Selector: FunctionComponent<{}> = () => {
 
   // Enabling 'Add To Cart' button
   useEffect(() => {
-    let correctAttributes = attributes
+    let correctAttributes = ["Cabinet Colour", "Basins", "Benchtop", "Handles", "Tapholes"];
+    correctAttributes = attributes
       .filter((attribute) => attribute.name !== "Accessories")
       .map((attribute) => attribute.name);
     correctAttributes = correctAttributes.filter(
       (value) => !requiredAttributesToRemove.includes(value)
     );
 
-    const isEqual = correctAttributes.every((value) => {
-      return currentSelection.some((obj) => obj.attributeName === value);
-    });
-    //console.log(correctAttributes);
+    let isEqual = false;
+    if ( currentSelection.length > 0 ){
+      isEqual = correctAttributes.every((value) => {
+        return currentSelection.some((obj) => obj.attributeName === value);
+      });
+    }
+    //console.log(currentSelection.length);
     //console.log(isEqual)
     if (isEqual) {
       setDisableCartBtn(false);
@@ -306,12 +310,12 @@ const Selector: FunctionComponent<{}> = () => {
       });
       updatedArray = newArray;
     } else {
-      //Un-hide all selected options
+      // Un-hide all selected options
       const newArray = updatedArray.map((attribute) => {
           return { ...attribute, show: true };
       });
       updatedArray = newArray;
-      //Re-add the ticks on the boxes if they exist in the newest array
+      // Re-add the ticks on the boxes if they exist in the newest array
       updatedArray.forEach((attribute) => {
         const btn = document.getElementById(attribute.attributeId.toString());
         if (btn) {
@@ -474,18 +478,12 @@ const Selector: FunctionComponent<{}> = () => {
       ) {
         setFullCountertopBasin(true);
         setRequiredAttributesToRemove(["Benchtop", "Tapholes"]);
-
-
       } else {
         setFullCountertopBasin(false);
         setRequiredAttributesToRemove([""]);
-
         // Update benchtop to match chosen basin
         updateSelectedBenchtop(selection.description);
-        
-        
       }
-      
       // Then select the chosen basin
       selectOption(selection.id);
 
@@ -552,6 +550,12 @@ const Selector: FunctionComponent<{}> = () => {
         const correctedBenchtop = benchtopAttributeObj?.options
         .filter((item) => item.name === currentBenchtopSelection?.optionName)
         .find((item) => item.description === type);
+
+        if (!correctedBenchtop){
+          benchtopAttributeObj?.options
+        .filter((item) => item.name === currentBenchtopSelection?.optionName)
+        .find((item) => item.description === "Overmount");
+        }
 
         // Set correct id for new benchtop
         if (correctedBenchtop) {
