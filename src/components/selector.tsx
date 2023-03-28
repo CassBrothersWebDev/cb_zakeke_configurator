@@ -168,7 +168,13 @@ const Selector: FunctionComponent<{}> = () => {
 
   // Enabling 'Add To Cart' button
   useEffect(() => {
-    let correctAttributes = ["Cabinet Colour", "Basins", "Benchtop", "Handles", "Tapholes"];
+    let correctAttributes = [
+      "Cabinet Colour",
+      "Basins",
+      "Benchtop",
+      "Handles",
+      "Tapholes",
+    ];
     correctAttributes = attributes
       .filter((attribute) => attribute.name !== "Accessories")
       .map((attribute) => attribute.name);
@@ -177,7 +183,7 @@ const Selector: FunctionComponent<{}> = () => {
     );
 
     let isEqual = false;
-    if ( currentSelection.length > 0 ){
+    if (currentSelection.length > 0) {
       isEqual = correctAttributes.every((value) => {
         return currentSelection.some((obj) => obj.attributeName === value);
       });
@@ -312,7 +318,7 @@ const Selector: FunctionComponent<{}> = () => {
     } else {
       // Un-hide all selected options
       const newArray = updatedArray.map((attribute) => {
-          return { ...attribute, show: true };
+        return { ...attribute, show: true };
       });
       updatedArray = newArray;
       // Re-add the ticks on the boxes if they exist in the newest array
@@ -327,145 +333,6 @@ const Selector: FunctionComponent<{}> = () => {
     }
 
     setCurrentSelection(updatedArray);
-
-    
-
-    /*
-     *     Handle selecting the option with underbasins
-     */
-    /*
-    // Get the current benchtop selection
-    const currentBenchtopSelection = updatedArray.find(
-      (item) => item.attributeName === "Benchtop"
-    );
-    if (selectedAttribute?.name === "Basins") {
-      // If selection.description === "Double" set isDoubleBasin to hide some taphole options
-      // console.log(selection.description);
-      if (selection.description === "Double") {
-        setIsDoubleAlphaBasin(true);
-        setIsSingleAlphaBasin(false);
-        //console.log("THIS IS AN ALPHA DOUBLE");
-        const benchtopAttributeObj = groups[0].attributes.find(
-          (item) => item.name === "Benchtop"
-        );
-        const alphaBenchObj = benchtopAttributeObj?.options.find(
-          (item) => item.name === "Alpha Top"
-        );
-        //console.log(noTapholeObj);
-        if (alphaBenchObj) {
-          selectOption(alphaBenchObj.id);
-          updateSelectionArray(alphaBenchObj);
-        }
-      } else {
-        setIsDoubleAlphaBasin(false);
-      }
-      if (selection.description === "Single") {
-        setIsSingleAlphaBasin(true);
-        setIsDoubleAlphaBasin(false);
-        //console.log("THIS IS AN ALPHA SINGLE");
-        const benchtopAttributeObj = groups[0].attributes.find(
-          (item) => item.name === "Benchtop"
-        );
-        const alphaBenchObj = benchtopAttributeObj?.options.find(
-          (item) => item.name === "Alpha Top"
-        );
-        //console.log(noTapholeObj);
-        if (alphaBenchObj) {
-          selectOption(alphaBenchObj.id);
-          updateSelectionArray(alphaBenchObj);
-        }
-      } else {
-        setIsSingleAlphaBasin(false);
-      }
-      // If selection.description === "Undermount", then change the Benchtop to the same style undermount version
-      if (
-        selection.description === "Undermount" &&
-        selection.attribute.name === "Basins"
-      ) {
-        //console.log("THIS IS AN UNDERMOUNT BASIN")
-        setIsUndermountBasin(true);
-        // Select the correct benchtop with hole
-        // Get the id for the currently selected benchtop style with hole
-        const benchtopAttributeObj = groups[0].attributes.find(
-          (item) => item.name === "Benchtop"
-        );
-        const selectedBenchtopUndermount = benchtopAttributeObj?.options
-          .filter((item) => item.name === currentBenchtopSelection?.optionName)
-          .find((item) => item.description === "Undermount");
-        //console.log(selectedBenchtopUndermount);
-        // Set correct id for benchtop with hole
-        if (selectedBenchtopUndermount) {
-          selectOption(selectedBenchtopUndermount.id);
-          //updateSelectionArray(selectedBenchtopUndermount);
-        } else {
-          // If no benchtop selected yet, set to the id of the first available undermount benchtop
-          const undermountBenchtop = benchtopAttributeObj?.options.find(
-            (item) => item.description === "Undermount"
-          );
-          if (undermountBenchtop) {
-            selectOption(undermountBenchtop.id);
-            updateSelectionArray(undermountBenchtop);
-          }
-        }
-        // Then select the chosen undermount basin
-        selectOption(selection.id);
-
-        // Check if centre taphole was chosen and if so, change to No Taphole option
-        const currentTapholeSelection = updatedArray.find(
-          (item) => item.attributeName === "Tapholes"
-        );
-        if (currentTapholeSelection?.optionName === "1 Taphole Centre") {
-          const tapholeAttributeObj = groups[0].attributes.find(
-            (item) => item.name === "Tapholes"
-          );
-          const noTapholeObj = tapholeAttributeObj?.options
-            .filter((item) => item.name === "No Taphole")
-            .find((item) => item.description === "Overmount");
-          //console.log(noTapholeObj);
-          if (noTapholeObj) {
-            selectOption(noTapholeObj.id);
-          }
-        }
-      } else {
-        //This is not an undermount basin
-        setIsUndermountBasin(false);
-        // Select the correct benchtop with NO hole
-        // Get the id for the currently selected benchtop style with NO hole
-        const benchtopAttributeObj = groups[0].attributes.find(
-          (item) => item.name === "Benchtop"
-        );
-        const selectedBenchtopOvermount = benchtopAttributeObj?.options
-          .filter((item) => item.name === currentBenchtopSelection?.optionName)
-          .find((item) => item.description !== "Undermount");
-        // Set correct id for benchtop with NO hole, check if it is "Alpha Top" first, and set to first overmount top if it is
-        if (selectedBenchtopOvermount?.name === "Alpha Top") {
-          // If no benchtop selected yet, set to the id of the first available overmount benchtop
-          const overmountBenchtop = benchtopAttributeObj?.options.find(
-            (item) => item.description === "Overmount"
-          );
-          if (overmountBenchtop) {
-            selectOption(overmountBenchtop.id);
-            updateSelectionArray(overmountBenchtop);
-          }
-        } else if (selectedBenchtopOvermount) {
-          selectOption(selectedBenchtopOvermount.id);
-          //console.log(selectedBenchtopOvermount);
-        } else {
-          // If no benchtop selected yet, set to the id of the first available overmount benchtop
-          const overmountBenchtop = benchtopAttributeObj?.options.find(
-            (item) => item.description === "Overmount"
-          );
-          if (overmountBenchtop) {
-            selectOption(overmountBenchtop.id);
-          }
-        }
-        // Then select the chosen top mounted basin
-        selectOption(selection.id);
-      }
-    } else {
-      selectOption(selection.id);
-    }
-    */
 
     /*
      *     Handle selecting the same benchtop when swapping from over/under basins
@@ -486,82 +353,33 @@ const Selector: FunctionComponent<{}> = () => {
       }
       // Then select the chosen basin
       selectOption(selection.id);
-
-      /*
-      // If selection.description === "Undermount", then change the Benchtop to the same style undermount version
-      if (
-        selection.description === "Undermount" &&
-        selection.attribute.name === "Basins"
-      ) {
-        ////This is an undermount basin that has been selected
-        //// Select the correct benchtop with hole
-        //// Get the id for the currently selected benchtop style with hole
-        //const benchtopAttributeObj = groups[0].attributes.find(
-        //  (item) => item.name === "Benchtop"
-        //);
-        //const selectedBenchtopUndermount = benchtopAttributeObj?.options
-        //  .filter((item) => item.name === currentBenchtopSelection?.optionName)
-        //  .find((item) => item.description === "Undermount");
-        ////console.log(selectedBenchtopUndermount);
-        //// Set correct id for benchtop with hole
-        //if (selectedBenchtopUndermount) {
-        //  selectOption(selectedBenchtopUndermount.id);
-        //  //updateSelectionArray(selectedBenchtopUndermount);
-        //} else {
-        //  // If no benchtop selected yet, set to the id of the first available undermount benchtop
-        //}
-        updateSelectedBenchtop(selection.description);
-        
-        // Then select the chosen undermount basin
-        selectOption(selection.id);
-      } else {
-        //This is not an undermount basin
-        // Select the correct benchtop with NO hole
-        // Get the id for the currently selected benchtop style with NO hole
-        const benchtopAttributeObj = groups[0].attributes.find(
-          (item) => item.name === "Benchtop"
-        );
-        const selectedBenchtopOvermount = benchtopAttributeObj?.options
-          .filter((item) => item.name === currentBenchtopSelection?.optionName)
-          .find((item) => item.description === "Overmount");
-        // Set correct id for benchtop with NO hole, check if it is "Alpha Top" first, and set to first overmount top if it is
-        if (selectedBenchtopOvermount) {
-          selectOption(selectedBenchtopOvermount.id);
-          //console.log(selectedBenchtopOvermount);
-        } else {
-          // If no benchtop selected yet, set to the id of the first available overmount benchtop
-        }
-        // Then select the chosen top mounted basin
-        selectOption(selection.id);
-      }
-      */
     }
   }
 
   const updateSelectedBenchtop = (type: string) => {
     const currentBenchtopSelection = currentSelection.find(
       (item) => item.attributeName === "Benchtop"
-      );
-      // Return all benchtops
-      const benchtopAttributeObj = groups[0].attributes.find(
-        (item) => item.name === "Benchtop"
-        );
-        
-        const correctedBenchtop = benchtopAttributeObj?.options
-        .filter((item) => item.name === currentBenchtopSelection?.optionName)
-        .find((item) => item.description === type);
+    );
+    // Return all benchtops
+    const benchtopAttributeObj = groups[0].attributes.find(
+      (item) => item.name === "Benchtop"
+    );
 
-        if (!correctedBenchtop){
-          benchtopAttributeObj?.options
+    const correctedBenchtop = benchtopAttributeObj?.options
+      .filter((item) => item.name === currentBenchtopSelection?.optionName)
+      .find((item) => item.description === type);
+
+    if (!correctedBenchtop) {
+      benchtopAttributeObj?.options
         .filter((item) => item.name === currentBenchtopSelection?.optionName)
         .find((item) => item.description === "Overmount");
-        }
+    }
 
-        // Set correct id for new benchtop
-        if (correctedBenchtop) {
-          console.log(correctedBenchtop);
-          selectOption(correctedBenchtop.id);
-        } 
+    // Set correct id for new benchtop
+    if (correctedBenchtop) {
+      console.log(correctedBenchtop);
+      selectOption(correctedBenchtop.id);
+    }
   };
 
   let counter = 0;
@@ -807,6 +625,7 @@ const Selector: FunctionComponent<{}> = () => {
                   let unavailableTitle = "";
                   //console.log(option);
 
+                  /*
                   if (!option.enabled && option.attribute.name === "Benchtop") {
                     itemAvailable = false;
                     unavailableTitle = "Incompatible basin selected";
@@ -820,67 +639,11 @@ const Selector: FunctionComponent<{}> = () => {
                   ) {
                     return;
                   }
-
-                  /*
-                  if (option.name === "Alpha Top") {
-                    return;
-                  }
-                  if (isUndermountBasin) {
-                    // If an Undermount Basin is selected
-                    // Do not show the silk surface overmount benchtops
-                    if (
-                      option.name.split(" ")[0] === "SilkSurface" &&
-                      option.description === "Overmount"
-                    ) {
-                      return;
-                    }
-                    // Disable the other overmount benchtops
-                    if (
-                      option.description === "Overmount" &&
-                      (option.attribute.name === "Benchtop" ||
-                        option.attribute.name === "Tapholes")
-                    ) {
-                      itemAvailable = false;
-                      unavailableTitle = "Unavailable with Undermount Basin";
-                    }
-                  } else {
-                    // If there is no Undermount basin selected
-                    // Do not show the undermount silksurface benchtops
-                    if (
-                      option.name.split(" ")[0] === "SilkSurface" &&
-                      option.description.split(" ")[0] === "Undermount"
-                    ) {
-                      return;
-                    }
-                  }
-
-                  if (isDoubleAlphaBasin) {
-                    // If a Double Alpha basin is selected only show the double taps
-                    if (
-                      option.description !== "Double" &&
-                      option.attribute.name === "Tapholes"
-                    ) {
-                      return;
-                    }
-                  } else if (isSingleAlphaBasin) {
-                    // If a Single Alpha basin is selected show only the single taps
-                    if (
-                      option.description !== "Single" &&
-                      option.attribute.name === "Tapholes"
-                    ) {
-                      return;
-                    }
-                  } else {
-                    // If neither of the Alpha basins are selected show all non alpha options for taps
-                    if (
-                      (option.description === "Single" ||
-                        option.description === "Double") &&
-                      option.attribute.name === "Tapholes"
-                    ) {
-                      return;
-                    }
-                  }
                   */
+                 if(!option.enabled){
+                  return
+                 }
+
                   return (
                     <div
                       onMouseEnter={handleMouseEnter}
@@ -931,7 +694,7 @@ const Selector: FunctionComponent<{}> = () => {
             <div className="selections-list">
               {currentSelection &&
                 currentSelection.map((selection) => {
-                  if (selection.show){
+                  if (selection.show) {
                     return (
                       <div className="selection">
                         <span className="selection--attribute">
@@ -943,7 +706,7 @@ const Selector: FunctionComponent<{}> = () => {
                       </div>
                     );
                   } else {
-                    return
+                    return;
                   }
                 })}
             </div>
