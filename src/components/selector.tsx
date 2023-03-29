@@ -51,7 +51,6 @@ const Selector: FunctionComponent<{}> = () => {
   const ulRef = useRef<HTMLDivElement>(null);
   const actualUlRef = useRef<HTMLUListElement>(null);
 
-
   const [qrUrl, setQrUrl] = useState<string | Blob>("");
 
   // Keep saved the ID and not the refereces, they will change on each update
@@ -334,8 +333,6 @@ const Selector: FunctionComponent<{}> = () => {
       });
     }
 
-    setCurrentSelection(updatedArray);
-
     /*
      *     Handle selecting the same benchtop when swapping from over/under basins
      */
@@ -352,10 +349,28 @@ const Selector: FunctionComponent<{}> = () => {
         setRequiredAttributesToRemove([""]);
         // Update benchtop to match chosen basin
         updateSelectedBenchtop(selection.description);
+        // Return all benchtops
+        const benchtopAttributeObj = groups[0].attributes.find(
+          (item) => item.name === "Benchtop"
+        );
+        const firstEnabledBenchtop = benchtopAttributeObj?.options.find(
+          (obj) => obj.enabled
+        );
+        const updatedSelection = updatedArray.map((selection) => {
+          if (selection.attributeName === "Benchtop") {
+            return {
+              ...selection,
+              optionName: firstEnabledBenchtop?.name,
+            };
+          }
+          return selection;
+        });
+        updatedArray = updatedSelection;
       }
       // Then select the chosen basin
       selectOption(selection.id);
     }
+    setCurrentSelection(updatedArray);
   }
 
   const updateSelectedBenchtop = (type: string) => {
@@ -371,7 +386,6 @@ const Selector: FunctionComponent<{}> = () => {
       .filter((item) => item.name === currentBenchtopSelection?.optionName)
       .find((item) => item.description === type);
 
-
     if (!correctedBenchtop) {
       benchtopAttributeObj?.options
         .filter((item) => item.name === currentBenchtopSelection?.optionName)
@@ -383,6 +397,7 @@ const Selector: FunctionComponent<{}> = () => {
       selectOption(correctedBenchtop.id);
     } else {
       // If none found select first available one (for the selection list only)
+      /*
       const firstEnabledBenchtop = benchtopAttributeObj?.options.find((obj) => obj.enabled);
       const updatedSelection = currentSelection.map(selection => {
         if (selection.attributeName === "Benchtop") {
@@ -394,6 +409,7 @@ const Selector: FunctionComponent<{}> = () => {
         return selection;
       });
       setCurrentSelection(updatedSelection);
+      */
     }
   };
 
@@ -483,7 +499,6 @@ const Selector: FunctionComponent<{}> = () => {
             {attributes &&
               attributes.map((attribute, index) => {
                 counter += 1;
-                
 
                 let attributeAvailable = true;
                 let unavailableTitle = "";
@@ -513,7 +528,6 @@ const Selector: FunctionComponent<{}> = () => {
                         selectAttribute(attribute.id);
 
                         setCameraByName(attribute.name, false, true);
-
                       }
                       if (index !== attributes.length - 1) {
                         nextBtnObj?.classList.remove("hidden");
@@ -530,7 +544,6 @@ const Selector: FunctionComponent<{}> = () => {
                     className="attributeListItem"
                     available={attributeAvailable}
                     title={unavailableTitle}
-                    
                   >
                     <div className="listBadge" id={attribute.id.toString()}>
                       {counter}
@@ -564,7 +577,11 @@ const Selector: FunctionComponent<{}> = () => {
                     }
                   }
 
-                  if(fullCountertopBasin && (attributes[currentIndex].name === "Benchtop" || attributes[currentIndex].name === "Tapholes")){
+                  if (
+                    fullCountertopBasin &&
+                    (attributes[currentIndex].name === "Benchtop" ||
+                      attributes[currentIndex].name === "Tapholes")
+                  ) {
                     currentIndex--;
                   }
 
@@ -577,7 +594,7 @@ const Selector: FunctionComponent<{}> = () => {
                     ulRef.current.scrollLeft = 0;
                   }
                   if (actualUlRef.current) {
-                    actualUlRef.current.scroll(0,0)
+                    actualUlRef.current.scroll(0, 0);
                   }
                 }
               }}
@@ -616,7 +633,11 @@ const Selector: FunctionComponent<{}> = () => {
                       nextBtnObj.classList.add("hidden");
                     }
                   }
-                  if(fullCountertopBasin && (attributes[currentIndex].name === "Benchtop" || attributes[currentIndex].name === "Tapholes")){
+                  if (
+                    fullCountertopBasin &&
+                    (attributes[currentIndex].name === "Benchtop" ||
+                      attributes[currentIndex].name === "Tapholes")
+                  ) {
                     currentIndex++;
                   }
                   selectAttribute(attributes[currentIndex].id);
@@ -627,11 +648,10 @@ const Selector: FunctionComponent<{}> = () => {
                     ulRef.current.scrollLeft = 0;
                     ulRef.current.scrollTop = 0;
                   }
-                  
-                    if (actualUlRef.current) {
-                      actualUlRef.current.scroll(0, 0);
-                    }
-                  
+
+                  if (actualUlRef.current) {
+                    actualUlRef.current.scroll(0, 0);
+                  }
                 }
               }}
             >
@@ -680,9 +700,9 @@ const Selector: FunctionComponent<{}> = () => {
                     return;
                   }
                   */
-                 if(!option.enabled){
-                  return
-                 }
+                  if (!option.enabled) {
+                    return;
+                  }
 
                   return (
                     <div
@@ -745,10 +765,9 @@ const Selector: FunctionComponent<{}> = () => {
                         </span>
                       </div>
                     );
-                  } 
-                  
-                  return;
-                  
+                  }
+
+                  return null;
                 })}
             </div>
             <h3 className="productBanner--price popup-price">${price}</h3>
