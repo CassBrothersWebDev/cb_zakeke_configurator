@@ -383,6 +383,13 @@ input[type="checkbox"]:hover {
 }
 
 @media (max-width: 860px) {
+
+  .addToCart-Loader{
+    width: 80vw;
+    height: 50vh;
+    top: -300%;
+  }
+
   .container {
     display: flex !important;
     flex-direction: column;
@@ -396,19 +403,18 @@ input[type="checkbox"]:hover {
 
   .optionMain {
     margin: 0;
-    
+    height: auto;
   }
 
   .optionContainer > ul {
     flex-wrap: nowrap;
-    overflow: visible;
+    overflow-y: hidden;
     overflow-x: auto;
     padding-bottom: 55px;
     margin-bottom: 0;
   }
 
   .optionContainer{
-    overflow: auto;
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }

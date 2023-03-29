@@ -49,6 +49,8 @@ const Selector: FunctionComponent<{}> = () => {
   const closeRef = useRef<HTMLAnchorElement>(null);
 
   const ulRef = useRef<HTMLDivElement>(null);
+  const actualUlRef = useRef<HTMLUListElement>(null);
+
 
   const [qrUrl, setQrUrl] = useState<string | Blob>("");
 
@@ -369,11 +371,13 @@ const Selector: FunctionComponent<{}> = () => {
       .filter((item) => item.name === currentBenchtopSelection?.optionName)
       .find((item) => item.description === type);
 
+
     if (!correctedBenchtop) {
       benchtopAttributeObj?.options
         .filter((item) => item.name === currentBenchtopSelection?.optionName)
         .find((item) => item.description === "Overmount");
     }
+    console.log("NewestBenchtop= " + correctedBenchtop);
 
     // Set correct id for new benchtop
     if (correctedBenchtop) {
@@ -466,7 +470,7 @@ const Selector: FunctionComponent<{}> = () => {
             </List>
           )}
 
-          <List>
+          <List ref={actualUlRef}>
             {attributes &&
               attributes.map((attribute, index) => {
                 counter += 1;
@@ -492,13 +496,16 @@ const Selector: FunctionComponent<{}> = () => {
                     key={attribute.id}
                     onClick={() => {
                       if (attributeAvailable) {
+                        if (ulRef.current) {
+                          ulRef.current.scrollTop = 0;
+                        }
+                        if (actualUlRef.current) {
+                          actualUlRef.current.scrollLeft = 0;
+                        }
                         selectAttribute(attribute.id);
 
                         setCameraByName(attribute.name, false, true);
 
-                        if (ulRef.current) {
-                          ulRef.current.scrollTop = 0;
-                        }
                       }
                       if (index !== attributes.length - 1) {
                         nextBtnObj?.classList.remove("hidden");
@@ -515,6 +522,7 @@ const Selector: FunctionComponent<{}> = () => {
                     className="attributeListItem"
                     available={attributeAvailable}
                     title={unavailableTitle}
+                    
                   >
                     <div className="listBadge" id={attribute.id.toString()}>
                       {counter}
@@ -551,6 +559,13 @@ const Selector: FunctionComponent<{}> = () => {
                   selectAttribute(attributes[currentIndex].id);
                   setCurrentOption(currentIndex + 1);
                   setCameraByName(attributes[currentIndex].name, false, true);
+
+                  if (ulRef.current) {
+                    ulRef.current.scrollTop = 0;
+                  }
+                  if (actualUlRef.current) {
+                    actualUlRef.current.scroll(0,0)
+                  }
                 }
               }}
             >
@@ -592,6 +607,15 @@ const Selector: FunctionComponent<{}> = () => {
                   selectAttribute(attributes[currentIndex].id);
                   setCurrentOption(currentIndex + 1);
                   setCameraByName(attributes[currentIndex].name, false, true);
+
+                  if (ulRef.current) {
+                    ulRef.current.scrollTop = 0;
+                  }
+                  
+                    if (actualUlRef.current) {
+                      actualUlRef.current.scroll(0, 0);
+                    }
+                  
                 }
               }}
             >
