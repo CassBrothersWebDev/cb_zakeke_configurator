@@ -18,7 +18,7 @@ const Container = styled.div`
 interface currentSelectionObj {
   attributeId: number;
   attributeName: string;
-  optionName: string;
+  optionName: string | undefined;
   show: boolean;
 }
 
@@ -377,12 +377,23 @@ const Selector: FunctionComponent<{}> = () => {
         .filter((item) => item.name === currentBenchtopSelection?.optionName)
         .find((item) => item.description === "Overmount");
     }
-    console.log("NewestBenchtop= " + correctedBenchtop);
 
     // Set correct id for new benchtop
     if (correctedBenchtop) {
-      console.log(correctedBenchtop);
       selectOption(correctedBenchtop.id);
+    } else {
+      // If none found select first available one (for the selection list only)
+      const firstEnabledBenchtop = benchtopAttributeObj?.options.find((obj) => obj.enabled);
+      const updatedSelection = currentSelection.map(selection => {
+        if (selection.attributeName === "Benchtop") {
+          return {
+            ...selection,
+            optionName: firstEnabledBenchtop?.name
+          };
+        }
+        return selection;
+      });
+      setCurrentSelection(updatedSelection);
     }
   };
 
@@ -390,8 +401,6 @@ const Selector: FunctionComponent<{}> = () => {
 
   const prevBtnObj = document.getElementById("prevBtn");
   const nextBtnObj = document.getElementById("nextBtn");
-
-  let accesoriesExists = false;
 
   const downloadPdf = async () => {
     try {
@@ -474,9 +483,7 @@ const Selector: FunctionComponent<{}> = () => {
             {attributes &&
               attributes.map((attribute, index) => {
                 counter += 1;
-                if (attribute.name === "Accessories") {
-                  accesoriesExists = true;
-                }
+                
 
                 let attributeAvailable = true;
                 let unavailableTitle = "";
@@ -498,6 +505,7 @@ const Selector: FunctionComponent<{}> = () => {
                       if (attributeAvailable) {
                         if (ulRef.current) {
                           ulRef.current.scrollTop = 0;
+                          ulRef.current.scrollLeft = 0;
                         }
                         if (actualUlRef.current) {
                           actualUlRef.current.scrollLeft = 0;
@@ -556,12 +564,17 @@ const Selector: FunctionComponent<{}> = () => {
                     }
                   }
 
+                  if(fullCountertopBasin && (attributes[currentIndex].name === "Benchtop" || attributes[currentIndex].name === "Tapholes")){
+                    currentIndex--;
+                  }
+
                   selectAttribute(attributes[currentIndex].id);
                   setCurrentOption(currentIndex + 1);
                   setCameraByName(attributes[currentIndex].name, false, true);
 
                   if (ulRef.current) {
                     ulRef.current.scrollTop = 0;
+                    ulRef.current.scrollLeft = 0;
                   }
                   if (actualUlRef.current) {
                     actualUlRef.current.scroll(0,0)
@@ -603,12 +616,15 @@ const Selector: FunctionComponent<{}> = () => {
                       nextBtnObj.classList.add("hidden");
                     }
                   }
-
+                  if(fullCountertopBasin && (attributes[currentIndex].name === "Benchtop" || attributes[currentIndex].name === "Tapholes")){
+                    currentIndex++;
+                  }
                   selectAttribute(attributes[currentIndex].id);
                   setCurrentOption(currentIndex + 1);
                   setCameraByName(attributes[currentIndex].name, false, true);
 
                   if (ulRef.current) {
+                    ulRef.current.scrollLeft = 0;
                     ulRef.current.scrollTop = 0;
                   }
                   
@@ -729,9 +745,10 @@ const Selector: FunctionComponent<{}> = () => {
                         </span>
                       </div>
                     );
-                  } else {
-                    return;
-                  }
+                  } 
+                  
+                  return;
+                  
                 })}
             </div>
             <h3 className="productBanner--price popup-price">${price}</h3>
@@ -831,9 +848,9 @@ const Selector: FunctionComponent<{}> = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="emailer-form">
-              <a href="#" className="emailer-close" onClick={toggleEmailPop}>
+              <button className="emailer-close" onClick={toggleEmailPop}>
                 ×
-              </a>
+              </button>
               <h3 className="emailer__title">
                 Enter your email to download your custom vanity design
               </h3>

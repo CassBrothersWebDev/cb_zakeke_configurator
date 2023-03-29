@@ -408,13 +408,17 @@ input[type="checkbox"]:hover {
 
   .optionContainer > ul {
     flex-wrap: nowrap;
-    overflow-y: hidden;
-    overflow-x: auto;
-    padding-bottom: 55px;
-    margin-bottom: 0;
+    overflow:visible;
+    margin: 0;
+    padding: 0;
+    width:100%;
   }
 
   .optionContainer{
+    overflow-y: hidden;
+    overflow-x: auto;
+    padding-bottom: 55px;
+    
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
