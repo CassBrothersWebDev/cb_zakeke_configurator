@@ -238,7 +238,7 @@ const Selector: FunctionComponent<{}> = () => {
   }
 
   function handleNewSelection(selection: any) {
-    console.log("SELECTING : " + selection.name + " , desc: " + selection.description);
+    console.log("SELECTING : " + selection.name);
     let newObject: currentSelectionObj = {
       attributeId: 0,
       attributeName: "selectedAttribute",
@@ -277,6 +277,63 @@ const Selector: FunctionComponent<{}> = () => {
       }
     }
 
+    
+    // Change selected choices for undercounter vanity changes.
+    if (selectedAttribute?.name === "Basins") {
+      // Check if we are using Undercounter Basins
+      if (selection.name.split(' ')[0] === "Undercounter") {
+        //  Return previous basin, benchtop & taphole choice
+        const prevBasinChoice = currentSelection.find(
+          (obj) => obj.attributeName === "Basins"
+        );
+        const prevBenchtopChoice = currentSelection.find(
+          (obj) => obj.attributeName === "Benchtop"
+        );
+        const prevTapChoice = currentSelection.find(
+          (obj) => obj.attributeName === "Tapholes"
+        );
+
+        // Update 'Benchtop' in selection array correctly
+        // If there is a bench chosen already and we are changing the basin
+        if (prevBenchtopChoice && selection.name !== prevBasinChoice?.optionName) {
+          // Check to see if it is just changing to a different Allure
+          if (selection.name.split(' ')[1] === "Allure" && prevBasinChoice?.optionName?.split(' ')[1] === "Allure"){
+            return;
+          } else {
+            //If changing to different basin the Benchtop will change to 'Arctic White' so update the selected array to show this
+            updatedArray = updatedArray.map((obj) => {
+              if (obj.attributeName === "Benchtop") {
+                return { ...obj, optionName: "Silksurface Arctic White" };
+              }
+              return obj;
+            });
+          }
+        }
+
+        //Update 'Tapholes' in selection array correctly
+
+        // If going from allure to rectangle basin (or vice versa), update to 'No Taphole'
+        if ((prevBasinChoice?.optionName?.split(' ')[1] === "Allure" && selection.name === "Undercounter Rectangle") || 
+        (prevBasinChoice?.optionName === "Undercounter Rectangle" && selection.name?.split(' ')[1] ===  "Allure")){
+          updatedArray = updatedArray.map((obj) => {
+            if (obj.attributeName === "Tapholes") {
+              return { ...obj, optionName: "No Taphole" };
+            }
+            return obj;
+          });
+        }
+        // If centre taphole selected and going from Oval to Allure update to 'No Taphole'
+        if ((prevTapChoice?.optionName === "1 Taphole Centre") && (prevBasinChoice?.optionName === "Undercounter Oval" && selection.name?.split(' ')[1] ===  "Allure" )) {
+          updatedArray = updatedArray.map((obj) => {
+            if (obj.attributeName === "Tapholes") {
+              return { ...obj, optionName: "No Taphole" };
+            }
+            return obj;
+          });
+        }
+      }
+    }
+    /*
     if (
       selection.attribute.name === "Basins" &&
       selection.description === "Counter"
@@ -333,6 +390,7 @@ const Selector: FunctionComponent<{}> = () => {
         }
       });
     }
+    */
 
     /*
      *     Handle selecting the same benchtop when swapping from over/under basins
