@@ -22,3 +22,4 @@ export function addEmail (user_email) {
         })
         .catch(err => console.error(err));
 } 
+

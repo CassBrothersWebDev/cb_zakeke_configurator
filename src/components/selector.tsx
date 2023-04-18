@@ -238,6 +238,7 @@ const Selector: FunctionComponent<{}> = () => {
   }
 
   function handleNewSelection(selection: any) {
+    console.log("SELECTING : " + selection.name + " , desc: " + selection.description);
     let newObject: currentSelectionObj = {
       attributeId: 0,
       attributeName: "selectedAttribute",
@@ -337,6 +338,7 @@ const Selector: FunctionComponent<{}> = () => {
      *     Handle selecting the same benchtop when swapping from over/under basins
      */
     if (selectedAttribute?.name === "Basins") {
+      /*
       // Check if the basin selection is a full counter basin
       if (
         selection.description === "Counter" &&
@@ -369,6 +371,7 @@ const Selector: FunctionComponent<{}> = () => {
       }
       // Then select the chosen basin
       selectOption(selection.id);
+      */
     }
     setCurrentSelection(updatedArray);
   }
