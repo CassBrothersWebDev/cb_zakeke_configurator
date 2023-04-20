@@ -479,20 +479,25 @@ const Selector: FunctionComponent<{}> = () => {
   const prevBtnObj = document.getElementById("prevBtn");
   const nextBtnObj = document.getElementById("nextBtn");
 
-  const downloadPdf = async () => {
+  const downloadPdf = async (pdf: string) => {
     try {
-      //const pdfUrl = await getPDF(); // assuming getPdfUrl returns a promise that resolves with the URL of the PDF
-      const response = await axios.get(pdfUrl, { responseType: "blob" });
-      const blob = response.data;
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "My-Custom-Vanity.pdf");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      toggleEmailPop();
-      setLoadingPDF(false);
+      //console.log("Start downloadPDF");
+      if (pdf !== '') {
+        const response = await axios.get(pdf, { responseType: "blob" });
+        const blob = response.data;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "My-Custom-Vanity.pdf");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toggleEmailPop();
+        setLoadingPDF(false);
+        //console.log("downloadPDF complete");
+      } else {
+        console.log("PDF url was blank");
+      }
     } catch (error) {
       console.error("Error while downloading PDF:", error);
     }
@@ -510,19 +515,27 @@ const Selector: FunctionComponent<{}> = () => {
     // Start getURL
   };
 
-  const savePDFUrl = async () => {
-    setPdfUrl(await getPDF());
-    console.log(pdfUrl);
-  };
+  //const savePDFUrl = async () => {
+  //  //await getPDF().then( pdf => {
+  //  //  setPdfUrl(pdf);
+  //  //});
+  //  //console.log(pdfUrl);
+  //};
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    //console.log("handle submit form");
     event.preventDefault();
     setLoadingPDF(true);
-    downloadPdf();
+    getPDF().then( pdf => {
+      //console.log("URL: " + pdf);
+      downloadPdf(pdf);
+    });
 
     if (isChecked) {
       // Add the email to the klaviyo list
       addEmail(email);
     }
+    //console.log("handleSubmit complete");
   };
 
   return (
@@ -865,7 +878,7 @@ const Selector: FunctionComponent<{}> = () => {
               onClick={() => {
                 //toggleEmailPop();
                 setShowingEmail(!showingEmail);
-                savePDFUrl();
+                //savePDFUrl();
                 const close = document.querySelector(
                   ".popup-close"
                 ) as HTMLAnchorElement;
