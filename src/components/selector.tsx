@@ -26,6 +26,7 @@ const Selector: FunctionComponent<{}> = () => {
   const {
     isSceneLoading,
     product,
+    productName,
     isAddToCartLoading,
     price,
     groups,
@@ -821,7 +822,7 @@ const Selector: FunctionComponent<{}> = () => {
             className="currentSelectionContainer"
           >
             <h3 className="popup__title">My Vanity</h3>
-            <h4 className="popup__productName">{product?.name}</h4>
+            <h4 className="popup__productName">{productName}</h4>
             <a href="#" className="popup-close">
               &times;
             </a>
@@ -895,7 +896,7 @@ const Selector: FunctionComponent<{}> = () => {
       </div>
 
       <div className="productBanner">
-        <h3 className="productBanner--title">{product?.name}</h3>
+        <h3 className="productBanner--title">{productName}</h3>
         <div className="productBanner--group">
           <h3 className="productBanner--price">${price}</h3>
 
