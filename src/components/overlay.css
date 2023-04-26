@@ -154,7 +154,7 @@
 }
 
 .img-container{
-  height: 500px;
+  height: 400px;
   margin-right: 240px;
 }
 
@@ -285,7 +285,7 @@
   }
 
   .img-container{
-    height: 250px;
+    height: 200px;
     margin-right: auto;
   }
 
@@ -306,7 +306,7 @@
   .image-row img{
     width:31%;
     margin: 5px;
-    height: 55%;
+    height: 40%;
     flex-basis: 35%;
   }
 
