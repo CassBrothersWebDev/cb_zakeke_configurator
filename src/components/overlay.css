@@ -53,10 +53,10 @@
   position: absolute;
   bottom: 0;
   right: 0;
-  margin: 24px;
-  font-size: 24px;
+  margin: 16px;
+  font-size: 18px;
   cursor: pointer;
-  padding:  10px 30px;
+  padding:  10px 20px;
   background-color: #FFF;
   color: #0A2136;
   border: 2px solid #0A2136;
@@ -103,7 +103,7 @@
 .slide-inner{
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 15px;
 }
 
 .slide-inner__steps{
@@ -129,11 +129,11 @@
 }
 
 .step-numberBox{
-  width: 180px;
-  height: 180px;
+  width: 100px;
+  height: 100px;
   background-color: #cfcfcf;
   border-radius: 50%;
-  font-size: 108px;
+  font-size: 72px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -146,10 +146,11 @@
 
 .step-text{
   margin: 16px;
+  font-size: 12px;
 }
 
 .step--heading{
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 .img-container{
@@ -183,6 +184,25 @@
 @media (max-width: 1290px) {
   .step-text{
     display:none;
+  }
+
+  .next-btn{
+    margin: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+  }
+
+  .slide-inner h1 {
+    margin-bottom: 20px;
+  }
+
+  .step--heading {
+    margin-bottom: 0;
+  }
+
+  .step-square {
+    height: 100px;
   }
 }
 
@@ -220,7 +240,7 @@
   .step-container{
     flex-direction: row;
     width:auto;
-    margin-top: 15px;
+    margin-top: 10px;
     justify-content: center;
     align-items: center;
   }
@@ -237,7 +257,7 @@
     justify-content: center;
     align-items: center;
     height: auto;
-    font-size: 14px;
+    font-size: 12px;
   }
 
   .step--heading{
@@ -246,19 +266,22 @@
 
   .slide-inner h1{
     text-align: center;
-    font-size: 24px;
+    font-size: 18px;
   }
 
   .next-btn{
-    margin: 15px;
-    font-size: 14px;
+    margin: 5px;
+    font-size: 12px;
     font-weight: 600;
-    
+    padding: 5px 15px;
   }
 
 
   .close-btn{
-    margin: 15px;
+    margin: 5px;
+    font-size: 8px;
+    height: 24px;
+    width: 24px;
   }
 
   .img-container{
@@ -288,6 +311,7 @@
   }
 
   .slide-inner{
-    margin-top: -30px;
+    margin-top: -10px;
+    gap: 15px;
   }
 }
