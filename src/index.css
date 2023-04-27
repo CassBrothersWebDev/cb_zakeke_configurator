@@ -174,8 +174,12 @@ input[type="checkbox"]:hover {
   position: relative;
   flex-grow: 2;
   max-width: 100%;
+  box-shadow: rgba(0, 0, 0, 0.18) 0px 2px 4px;
 }
 
+.optionItem:hover{
+  box-shadow: rgba(0, 0, 0, 0.28) 0px 2px 4px;
+}
 .hidden {
   display: none !important;
 }
