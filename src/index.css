@@ -546,9 +546,7 @@ input[type="checkbox"]:hover {
   }
 
   .productBanner--title {
-    font-size: 12px;
-    padding: 20px;
-    margin: auto;
+    display: none;
   }
 
   .productBanner--price {
