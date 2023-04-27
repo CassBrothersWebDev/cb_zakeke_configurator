@@ -519,7 +519,8 @@ input[type="checkbox"]:hover {
     display: block;
     position: absolute;
     bottom: 25%;
-    left: 10%;
+    left: 0%;
+
   }
 
   .selections-list {
