@@ -525,7 +525,7 @@ input[type="checkbox"]:hover {
   .selections-list {
     width: 100%;
     position: absolute;
-    top: 20%;
+    top: 30%;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
