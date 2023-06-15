@@ -1,5 +1,4 @@
 # Cass Brothers Vanity Configurator
-
 Developed for cassbrothers.com.au by Gavin Bentley
 
 
@@ -7,3 +6,10 @@ For use on shopify linking with Zakeke Product Customiser 3D
 
 For testing purposes values need to be passed to url, use below link to view test with the 600mm Nevada plus product:
 http://localhost:3000/?name=600+Nevada+Plus+Zakake+Test&modelCode=7106600075308&currency=AUD&ecommerce=preview&qty=1&culture=en-US&token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiU2VsbGVyIiwiUGVybUJpdHMiOiIwMTAwMTExMDAxMTAwMTExMTExMTAxIiwidW5pcXVlX25hbWUiOiJjYXNzYnJvdGhlcnMubXlzaG9waWZ5LmNvbS01MjAyMzE1MC00NTFmLTQyZjItODMxNy0yZTQ3OWY2OTg2ZWQtazVqNDJveGsubHh1IiwiVXNlcklEIjoiODIwOTYiLCJVc2VyTmFtZSI6ImNhc3Nicm90aGVycy5teXNob3BpZnkuY29tLTUyMDIzMTUwLTQ1MWYtNDJmMi04MzE3LTJlNDc5ZjY5ODZlZC1rNWo0Mm94ay5seHUiLCJlbWFpbCI6ImNhc3Nicm90aGVycy5teXNob3BpZnkuY29tLXZqM2xnMGwyLmppckB6YWtla2UuY29tIiwiVXNlclR5cGVJRCI6IjMiLCJJc3N1ZURhdGUiOiIxOS0wMy0yMDIzIDIwLTI2LTU4WiIsIlVzZXJWZXJzaW9uIjoiMjAyMzAzMTcwNDUwMzQiLCJjbGllbnRJRCI6IjgwNzk4Iiwic2FsZXNDaGFubmVsSUQiOiIxIiwiY3VzdG9tZXJjb2RlIjoiY3VzdG9tZXIiLCJhY2Nlc3NUeXBlIjoiUzJTIiwibmJmIjoxNjc5MjU3NjE4LCJleHAiOjE2NzkzNDQwMTgsImlhdCI6MTY3OTI1NzYxOCwiaXNzIjoid3d3Lnpha2VrZS5jb20iLCJhdWQiOiJodHRwczovL3d3dy56YWtla2UuY29tIn0.EfjKsQanf8nuR6M_tMejt_Ei9ILFF2tkGqgUwM-s0PY&fromUrl=1&viewerMode=1
+
+- Relys on zakeke-configurator-react package and Zakeke Product Customiser shopify app for 3D element.
+- Most changes have been made to the selection methods in 'selector.tsx'.
+- Makes use of proxy api to send email information into Klaviyo when users enter their email while downloading the design. (This is also available via vercel)
+
+
+This app is hosted on vercel and linked via hidden tags in zakeke product descriptions - all linking is handled by zakeke.
